@@ -11,7 +11,7 @@ interface PaywallProps {
 
 export const Paywall: React.FC<PaywallProps> = ({ onSuccess, onClose, onPrivacy, onTerms, onSubscription }) => {
     const handleCheckout = () => {
-        const stripeLink = (process as any).env.STRIPE_PAYMENT_LINK || (process as any).env.STRIPE_URL;
+        const stripeLink = (import.meta as any).env.VITE_STRIPE_PAYMENT_LINK || (import.meta as any).env.VITE_STRIPE_URL;
         if (stripeLink) {
             window.location.href = stripeLink;
         } else {

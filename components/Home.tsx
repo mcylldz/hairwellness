@@ -46,7 +46,7 @@ export const Home: React.FC = () => {
   const getAnswer = (key: string) => answers[key];
 
   const sendToWebhook = async (result: AnalysisResult) => {
-    const webhookUrl = (process as any).env.N8N_WEBHOOK_URL || (process as any).env.WEBHOOK_URL;
+    const webhookUrl = (import.meta as any).env.VITE_N8N_WEBHOOK_URL || (import.meta as any).env.VITE_WEBHOOK_URL;
     if (!webhookUrl) return;
 
     try {
@@ -122,7 +122,7 @@ export const Home: React.FC = () => {
     `;
 
     try {
-      const apiKey = (process as any).env.GEMINI_API_KEY || (process as any).env.API_KEY;
+      const apiKey = (import.meta as any).env.VITE_GEMINI_API_KEY || (import.meta as any).env.VITE_API_KEY;
       const ai = new GoogleGenAI({ apiKey });
 
       const parts: any[] = [{ text: promptText }];
