@@ -95,39 +95,39 @@ export const SURVEY_STEPS: SurveyQuestion[] = [
     testimonials: [
       {
         id: 1,
-        name: "Emma",
-        age: 32,
-        timeframe: "4 months with Mesu",
-        result: "My hair texture completely transformed, feeling much softer and stronger.",
-        beforeImage: "/image_4.png",
-        afterImage: "/image_1.png"
+        name: "Lila",
+        age: 27,
+        timeframe: "3 months with Mesu",
+        result: "My frizz is finally under control. I never thought my natural hair could look this polished and healthy.",
+        beforeImage: "/testimonial_1.jpg",
+        afterImage: "/testimonial_1.jpg"
       },
       {
         id: 2,
-        name: "Sarah",
-        age: 34,
-        timeframe: "3 months with Mesu",
-        result: "Visible improvement in hair texture and shine. I finally found what works.",
-        beforeImage: "/image_2.png",
-        afterImage: "/image_3.png"
+        name: "Maya",
+        age: 31,
+        timeframe: "4 months with Mesu",
+        result: "The strength and shine are incredible. My hair feels thicker and much more resilient than before.",
+        beforeImage: "/testimonial_2.jpg",
+        afterImage: "/testimonial_2.jpg"
       },
       {
         id: 3,
-        name: "Sophia",
-        age: 29,
-        timeframe: "6 months with Mesu",
-        result: "I was worried about thinning near my part, but the new growth is incredible.",
-        beforeImage: "/image_4.png",
-        afterImage: "/image_2.png"
+        name: "Clara",
+        age: 35,
+        timeframe: "5 months with Mesu",
+        result: "I finally found a routine that actually works for my texture. The transformation has been a huge confidence boost.",
+        beforeImage: "/testimonial_3.jpg",
+        afterImage: "/testimonial_3.jpg"
       },
       {
         id: 4,
         name: "Elena",
-        age: 42,
-        timeframe: "4 months with Mesu",
-        result: "Volume restored and my scalp feels so much healthier than before.",
-        beforeImage: "/image_3.png",
-        afterImage: "/image_1.png"
+        age: 44,
+        timeframe: "6 months with Mesu",
+        result: "My hair hasn't looked this full and vibrant in years. The personalized approach made all the difference.",
+        beforeImage: "/testimonial_4.jpg",
+        afterImage: "/testimonial_4.jpg"
       }
     ]
   },
@@ -362,7 +362,7 @@ export const SURVEY_STEPS: SurveyQuestion[] = [
           "Reduced daily shedding",
           "Better product routine established"
         ],
-        imageSrc: "/image_4.png"
+        imageSrc: "/journey_1.jpg"
       },
       {
         id: 2,
@@ -374,7 +374,7 @@ export const SURVEY_STEPS: SurveyQuestion[] = [
           "Improved texture and feel",
           "Building healthy habits"
         ],
-        imageSrc: "/image_1.png"
+        imageSrc: "/journey_2.jpg"
       },
       {
         id: 3,
@@ -386,7 +386,7 @@ export const SURVEY_STEPS: SurveyQuestion[] = [
           "Increased confidence",
           "Sustained progress"
         ],
-        imageSrc: "/image_3.png"
+        imageSrc: "/journey_3.jpg"
       },
       {
         id: 4,
@@ -398,7 +398,7 @@ export const SURVEY_STEPS: SurveyQuestion[] = [
           "Adapting to your needs",
           "Long-term wellness"
         ],
-        imageSrc: "/image_2.png"
+        imageSrc: "/journey_4.jpg"
       }
     ]
   },
@@ -427,10 +427,10 @@ export const SURVEY_STEPS: SurveyQuestion[] = [
     imageSrc: "/image_1.png",
     customButtonText: "Scan Your Hair",
     infoSlides: [
-      { id: 1, imageSrc: "/image_1.png" },
-      { id: 2, imageSrc: "/image_2.png" },
-      { id: 3, imageSrc: "/image_3.png" },
-      { id: 4, imageSrc: "/image_4.png" }
+      { id: 1, text: "Answer questions about your hair and upload photos for analysis.", imageSrc: "/onboarding_1.png" },
+      { id: 2, text: "Get an in-depth hair report and personalized recommendations.", imageSrc: "/onboarding_2.png" },
+      { id: 3, text: "Follow easy, effective routines tailored to your unique hair needs.", imageSrc: "/onboarding_3.png" },
+      { id: 4, text: "Track your progress and adjust your routine as your hair improves.", imageSrc: "/onboarding_4.png" }
     ]
   },
   {

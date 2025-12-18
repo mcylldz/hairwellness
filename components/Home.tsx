@@ -74,6 +74,21 @@ export const Home: React.FC = () => {
   };
 
   const handleNext = () => {
+    // Handling multi-slide steps
+    if (currentStep.type === 'info-carousel') {
+      const slides = currentStep.infoSlides || [];
+      if (infoCarouselIndex < slides.length - 1) {
+        setInfoCarouselIndex(prev => prev + 1);
+        return;
+      }
+    } else if (currentStep.type === 'checklist-carousel') {
+      const phases = currentStep.journeyPhases || [];
+      if (checklistIndex < phases.length - 1) {
+        setChecklistIndex(prev => prev + 1);
+        return;
+      }
+    }
+
     if (currentStepIndex < SURVEY_STEPS.length - 1) {
       setCurrentStepIndex(prev => prev + 1);
     } else {
@@ -122,7 +137,7 @@ export const Home: React.FC = () => {
     `;
 
     try {
-      const apiKey = (import.meta as any).env.VITE_GEMINI_API_KEY || (import.meta as any).env.VITE_API_KEY;
+      const apiKey = (import.meta as any).env.VITE_GEMINI_API_KEY || (import.meta as any).env.GEMINI_API_KEY;
       const ai = new GoogleGenAI({ apiKey });
 
       const parts: any[] = [{ text: promptText }];
@@ -425,16 +440,14 @@ export const Home: React.FC = () => {
 
     return (
       <div className="flex flex-col items-center justify-center text-center space-y-6 py-4">
-        <div className="w-64 h-64 relative">
-          <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-xl mx-auto z-10 bg-white">
-            {imageToDisplay && (
-              <img
-                src={imageToDisplay}
-                alt="Illustration"
-                className="w-full h-full object-cover"
-              />
-            )}
-          </div>
+        <div className="w-72 h-72 relative flex items-center justify-center">
+          {imageToDisplay && (
+            <img
+              src={imageToDisplay}
+              alt="Illustration"
+              className="max-w-full max-h-full object-contain"
+            />
+          )}
         </div>
 
         <div className="space-y-3 max-w-sm">
@@ -449,14 +462,14 @@ export const Home: React.FC = () => {
         </div>
 
         {(activeSlide?.text || activeSlide?.icon) && (
-          <div className="w-full bg-cyan-50 rounded-2xl p-6 min-h-[160px] flex flex-col items-center justify-center space-y-4 shadow-inner transition-all duration-300">
+          <div className="w-full bg-cyan-50 rounded-2xl p-6 min-h-[120px] flex flex-col items-center justify-center space-y-4 shadow-inner transition-all duration-300">
             {activeSlide.icon && (
-              <div className="text-5xl animate-bounce-short">
+              <div className="text-4xl animate-bounce-short">
                 {activeSlide.icon}
               </div>
             )}
             {activeSlide.text && (
-              <p className="text-slate-800 font-medium leading-snug max-w-xs mx-auto">
+              <p className="text-slate-800 font-medium leading-snug max-w-xs mx-auto text-sm md:text-base">
                 {activeSlide.text}
               </p>
             )}
@@ -599,17 +612,12 @@ export const Home: React.FC = () => {
   const renderTransition = () => {
     return (
       <div className="flex flex-col items-center justify-center text-center space-y-8 py-8">
-        <div className="w-64 h-64 relative">
-          <svg viewBox="0 0 200 200" className="absolute top-0 left-0 w-full h-full text-cyan-200/50 fill-current animate-pulse">
-            <path d="M44.7,-76.4C58.9,-69.2,71.8,-59.1,81.6,-46.6C91.4,-34.1,98.2,-19.2,95.8,-5.2C93.5,8.9,82,22,70.9,33.2C59.8,44.4,49.1,53.7,37.4,62.1C25.7,70.5,13.1,78,0.3,77.5C-12.5,77,-24.9,68.5,-37.2,60.6C-49.5,52.7,-61.6,45.4,-70.6,35.2C-79.6,25,-85.4,11.9,-83.4,0.1C-81.4,-11.7,-71.6,-22.2,-61.4,-30.9C-51.2,-39.6,-40.7,-46.5,-29.6,-55.8C-18.5,-65.1,-6.9,-76.9,6.2,-87.6C19.3,-98.3,30.5,-107.9,44.7,-76.4Z" transform="translate(100 100)" />
-          </svg>
-          <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-white shadow-2xl">
-            <img
-              src={currentStep.imageSrc}
-              alt="Profile Building"
-              className="w-full h-full object-cover"
-            />
-          </div>
+        <div className="w-72 h-72 relative flex items-center justify-center">
+          <img
+            src={currentStep.imageSrc}
+            alt="Profile Building"
+            className="max-w-full max-h-full object-contain"
+          />
         </div>
 
         <div className="space-y-4 max-w-sm">
