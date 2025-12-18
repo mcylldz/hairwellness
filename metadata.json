@@ -1,0 +1,7 @@
+{
+  "name": "HairWellnessAI",
+  "description": "AI-powered hair analysis and wellness journey application.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
