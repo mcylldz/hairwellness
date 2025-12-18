@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 /* Core Design System */
 :root {
     --cyan-500: #06b6d4;
@@ -23,7 +25,6 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* Custom Utilities (Since we aren't using a Tailwind build step for this file) */
 
 /* Scrollbar styling */
 ::-webkit-scrollbar {
