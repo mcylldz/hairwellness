@@ -87,6 +87,12 @@ export const Home: React.FC = () => {
         setChecklistIndex(prev => prev + 1);
         return;
       }
+    } else if (currentStep.type === 'testimonials') {
+      const testimonials = currentStep.testimonials || [];
+      if (testimonialIndex < testimonials.length - 1) {
+        setTestimonialIndex(prev => prev + 1);
+        return;
+      }
     }
 
     if (currentStepIndex < SURVEY_STEPS.length - 1) {
@@ -155,7 +161,7 @@ export const Home: React.FC = () => {
       }
 
       const response = await ai.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: 'gemini-1.5-flash-latest',
         contents: { parts: parts },
         config: {
           responseMimeType: "application/json",
@@ -384,15 +390,8 @@ export const Home: React.FC = () => {
 
     return (
       <div className="w-full flex flex-col space-y-6">
-        <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden flex relative shadow-lg">
-          <div className="w-1/2 h-full relative">
-            <img src={activeTestimonial.beforeImage} alt="Before" className="w-full h-full object-cover" />
-            <div className="absolute top-2 left-2 bg-black/50 text-white text-[10px] font-bold px-2 py-1 rounded backdrop-blur-sm">BEFORE</div>
-          </div>
-          <div className="w-1/2 h-full relative">
-            <img src={activeTestimonial.afterImage} alt="After" className="w-full h-full object-cover" />
-            <div className="absolute top-2 right-2 bg-cyan-500 text-white text-[10px] font-bold px-2 py-1 rounded backdrop-blur-sm">AFTER</div>
-          </div>
+        <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-lg bg-slate-100">
+          <img src={activeTestimonial.beforeImage} alt={activeTestimonial.name} className="w-full h-full object-cover" />
         </div>
 
         <div className="flex items-center justify-between">
