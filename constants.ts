@@ -8,28 +8,28 @@ export const ONBOARDING_SLIDES: SlideData[] = [
     title: APP_TITLE,
     description: "Answer questions about your hair and upload photos for analysis.",
     imageAlt: "User taking a photo of their hair",
-    imageSrc: "/image_4.png"
+    imageSrc: "/onboarding_1.png"
   },
   {
     id: 2,
     title: APP_TITLE,
     description: "Get an in-depth hair report and personalized recommendations.",
     imageAlt: "Hair report dashboard example",
-    imageSrc: "/image_1.png"
+    imageSrc: "/onboarding_2.png"
   },
   {
     id: 3,
     title: APP_TITLE,
     description: "Follow easy, effective routines tailored to your unique hair needs.",
     imageAlt: "Daily routine checklist",
-    imageSrc: "/image_3.png"
+    imageSrc: "/onboarding_3.png"
   },
   {
     id: 4,
     title: APP_TITLE,
     description: "Track your progress and adjust your routine as your hair improves.",
     imageAlt: "Progress tracker graph",
-    imageSrc: "/image_2.png"
+    imageSrc: "/onboarding_4.png"
   }
 ];
 

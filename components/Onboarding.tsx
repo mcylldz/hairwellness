@@ -24,13 +24,13 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
 
   return (
     <div className="h-screen w-full flex flex-col bg-white overflow-hidden text-slate-900">
-      
+
       {/* Top Trust Badge */}
       <div className="pt-6 px-6 flex flex-col items-center justify-center space-y-1 shrink-0">
         <div className="flex items-center space-x-2 text-cyan-600">
-           <Wheat className="w-4 h-4 -scale-x-100" /> 
-           <span className="text-[10px] font-bold uppercase tracking-wider text-slate-900">Trusted by 100k+ users</span>
-           <Wheat className="w-4 h-4" />
+          <Wheat className="w-4 h-4 -scale-x-100" />
+          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-900">Trusted by 100k+ users</span>
+          <Wheat className="w-4 h-4" />
         </div>
         <div className="flex space-x-1">
           {[1, 2, 3, 4, 5].map((star) => (
@@ -41,7 +41,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col px-6 pt-4 min-h-0">
-        
+
         {/* Header Text */}
         <div className="text-center mb-2 shrink-0 z-10">
           <h1 className="text-2xl font-bold leading-tight mb-2">
@@ -52,31 +52,30 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
           </p>
         </div>
 
-        {/* Dynamic Image Area */}
-        <div className="flex-1 w-full relative flex items-center justify-center min-h-0 py-4">
-          <div className="h-full w-auto aspect-[9/16] bg-slate-100 rounded-[2rem] border-4 border-slate-50 shadow-xl overflow-hidden flex items-center justify-center relative max-w-full">
-             {!imgError ? (
-               <img 
-                 key={currentSlide.imageSrc} 
-                 src={currentSlide.imageSrc} 
-                 alt={currentSlide.imageAlt}
-                 className="w-full h-full object-cover"
-                 onError={() => setImgError(true)}
-               />
-             ) : (
-               <div className="flex flex-col items-center justify-center text-center p-6 text-slate-400 bg-slate-50 w-full h-full">
-                  <ImageOff className="w-12 h-12 mb-4 opacity-50" />
-                  <div className="mb-2 font-mono text-[10px] uppercase tracking-widest border border-slate-300 rounded px-2 py-1 inline-block">
-                      Visual Not Found
-                  </div>
-                  <p className="text-xs px-2 mb-2">
-                      {currentSlide.imageAlt}
-                  </p>
-                  <p className="text-[10px] text-red-400 bg-red-50 px-2 py-1 rounded">
-                    Missing: {currentSlide.imageSrc}
-                  </p>
-               </div>
-             )}
+        <div className="flex-1 w-full relative flex items-center justify-center min-h-0 py-8">
+          <div className="h-full w-full flex items-center justify-center relative">
+            {!imgError ? (
+              <img
+                key={currentSlide.imageSrc}
+                src={currentSlide.imageSrc}
+                alt={currentSlide.imageAlt}
+                className="max-w-full max-h-full object-contain"
+                onError={() => setImgError(true)}
+              />
+            ) : (
+              <div className="flex flex-col items-center justify-center text-center p-6 text-slate-400 bg-slate-50 w-full h-full">
+                <ImageOff className="w-12 h-12 mb-4 opacity-50" />
+                <div className="mb-2 font-mono text-[10px] uppercase tracking-widest border border-slate-300 rounded px-2 py-1 inline-block">
+                  Visual Not Found
+                </div>
+                <p className="text-xs px-2 mb-2">
+                  {currentSlide.imageAlt}
+                </p>
+                <p className="text-[10px] text-red-400 bg-red-50 px-2 py-1 rounded">
+                  Missing: {currentSlide.imageSrc}
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -85,11 +84,10 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
           {ONBOARDING_SLIDES.map((slide, index) => (
             <div
               key={slide.id}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                index === currentSlideIndex 
-                  ? 'w-6 bg-cyan-500' 
+              className={`h-1.5 rounded-full transition-all duration-300 ${index === currentSlideIndex
+                  ? 'w-6 bg-cyan-500'
                   : 'w-1.5 bg-cyan-200'
-              }`}
+                }`}
             />
           ))}
         </div>
