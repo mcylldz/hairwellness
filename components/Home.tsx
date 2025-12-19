@@ -58,7 +58,7 @@ export const Home = () => {
   const getAnswer = (key: string) => answers[key];
 
   const sendToWebhook = async (result: AnalysisResult) => {
-    const webhookUrl = (import.meta as any).env.VITE_N8N_WEBHOOK_URL || (import.meta as any).env.VITE_WEBHOOK_URL;
+    const webhookUrl = (import.meta as any).env.VITE_N8N_WEBHOOK_URL || (import.meta as any).env.VITE_WEBHOOK_URL || (window as any)._env_?.N8N_WEBHOOK_URL;
     if (!webhookUrl) {
       console.log("No webhook URL configured");
       return;

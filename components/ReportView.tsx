@@ -46,50 +46,39 @@ export const ReportView: React.FC<ReportViewProps> = ({ data, onUnlock }) => {
 
          <div className="px-6 py-6 space-y-8 font-sans">
 
-            {/* 12-Week Plan (Locked) */}
-            <div className="relative overflow-hidden rounded-[2.5rem] bg-white p-8 shadow-2xl shadow-cyan-100 border border-cyan-50 group">
+            {/* 12-Week Plan (Locked) - MINIMIZED */}
+            <div className="relative overflow-hidden rounded-3xl bg-white p-6 shadow-xl shadow-cyan-100/50 border border-cyan-50 group">
                {/* Background Decorative Gradient */}
-               <div className="absolute -right-20 -top-20 h-40 w-40 rounded-full bg-cyan-100/50 blur-3xl transition-all group-hover:scale-150 duration-700" />
-               <div className="absolute -left-20 -bottom-20 h-40 w-40 rounded-full bg-blue-50/50 blur-3xl transition-all group-hover:scale-150 duration-700" />
+               <div className="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-cyan-100/30 blur-2xl" />
 
                <div className="relative z-10 flex flex-col items-center text-center">
-                  <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-cyan-50 text-cyan-500 shadow-inner">
-                     <Lock className="h-8 w-8" />
+                  <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-cyan-50 text-cyan-500">
+                     <Lock className="h-6 w-6" />
                   </div>
 
-                  <span className="mb-1 text-[10px] font-black uppercase tracking-[0.2em] text-cyan-400">
-                     12-Week Transformation Plan
+                  <span className="mb-1 text-[9px] font-black uppercase tracking-[0.2em] text-cyan-400">
+                     12-Week Plan
                   </span>
 
-                  <h3 className="mb-4 text-3xl font-black text-slate-900 leading-tight">
-                     Your Routine is<br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600">Locked</span>
+                  <h3 className="mb-2 text-xl font-black text-slate-900 leading-tight">
+                     Routine <span className="text-cyan-600">Locked</span>
                   </h3>
 
-                  <p className="mb-8 max-w-[240px] text-sm font-medium text-slate-400 leading-relaxed">
-                     Unlock your day-by-day roadmap, personalized product list, and expert growth guides.
+                  <p className="mb-5 max-w-[220px] text-xs font-medium text-slate-400 leading-tight">
+                     Unlock your custom roadmap and expert growth guides.
                   </p>
 
                   <button
                      onClick={onUnlock}
-                     className="group/btn relative w-full overflow-hidden rounded-full bg-cyan-500 p-[2px] transition-all hover:shadow-cyan-200 active:scale-95 shadow-xl shadow-cyan-100/50"
+                     className="w-full rounded-full bg-cyan-500 py-3.5 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-cyan-200 active:scale-95 transition-all"
                   >
-                     <div className="relative z-10 rounded-full bg-cyan-500 px-8 py-4 text-base font-black uppercase tracking-widest text-white transition-colors group-hover/btn:bg-transparent">
-                        Reveal My Plan
-                     </div>
+                     Reveal My Plan
                   </button>
                </div>
 
-               {/* Mock Content underneath for depth */}
-               <div className="mt-8 space-y-4 blur-[4px] pointer-events-none opacity-10 select-none">
-                  {[1, 2].map(i => (
-                     <div key={i} className="flex items-start space-x-3">
-                        <div className="h-10 w-10 shrink-0 rounded-xl bg-slate-200" />
-                        <div className="flex-1 space-y-2 py-1">
-                           <div className="h-3 w-24 bg-slate-200 rounded" />
-                           <div className="h-2 w-full bg-slate-100 rounded" />
-                        </div>
-                     </div>
-                  ))}
+               {/* Hint of content underneath */}
+               <div className="mt-4 flex justify-center space-x-2 blur-[2px] opacity-10 select-none">
+                  {[1, 2, 3].map(i => <div key={i} className="h-1 w-8 bg-slate-200 rounded" />)}
                </div>
             </div>
 

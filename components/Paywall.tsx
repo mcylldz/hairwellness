@@ -11,14 +11,35 @@ interface PaywallProps {
 
 export const Paywall: React.FC<PaywallProps> = ({ onSuccess, onClose, onPrivacy, onTerms, onSubscription }) => {
     const handleCheckout = () => {
-        const stripeLink = (import.meta as any).env.VITE_STRIPE_PAYMENT_LINK || (import.meta as any).env.VITE_STRIPE_URL;
+        const stripeLink = (import.meta as any).env.VITE_STRIPE_PAYMENT_LINK ||
+            (import.meta as any).env.VITE_STRIPE_URL ||
+            (window as any)._env_?.STRIPE_PAYMENT_LINK;
+
+        console.log("Attempting checkout with link:", stripeLink);
+
         if (stripeLink) {
             window.location.href = stripeLink;
         } else {
-            console.error("STRIPE_PAYMENT_LINK not found");
+            console.error("STRIPE_PAYMENT_LINK not found. Fallback to success page for testing.");
             onSuccess();
         }
     };
+
+    const testimonials = [
+        { name: "Lila", age: 27, text: "My frizz is finally under control. I never thought my natural hair could look this polished and healthy.", img: "/testimonial_1.jpg" },
+        { name: "Maya", age: 31, text: "The strength and shine are incredible. My hair feels thicker and much more resilient than before.", img: "/testimonial_2.jpg" },
+        { name: "Clara", age: 35, text: "I finally found a routine that actually works for my texture. The transformation has been a huge confidence boost.", img: "/testimonial_3.jpg" },
+        { name: "Elena", age: 44, text: "My hair hasn't looked this full and vibrant in years. The personalized approach made all the difference.", img: "/testimonial_4.jpg" }
+    ];
+
+    const [activeTestimonial, setActiveTestimonial] = React.useState(0);
+
+    React.useEffect(() => {
+        const timer = setInterval(() => {
+            setActiveTestimonial(prev => (prev + 1) % testimonials.length);
+        }, 4000);
+        return () => clearInterval(timer);
+    }, []);
 
     return (
         <div className="fixed inset-0 z-50 bg-white overflow-y-auto animate-in slide-in-from-bottom duration-500">
@@ -51,43 +72,45 @@ export const Paywall: React.FC<PaywallProps> = ({ onSuccess, onClose, onPrivacy,
                     ))}
                 </div>
 
-                {/* Hero Impact Image (Lisa example) */}
-                <div className="w-full relative rounded-[32px] overflow-hidden shadow-2xl mb-8 border border-slate-100">
-                    <div className="flex h-72">
-                        <div className="w-1/2 relative">
-                            <img src="/photo_testimonial_1.jpg" className="w-full h-full object-cover" alt="Before" />
-                            <div className="absolute top-4 left-4 bg-[#00E5FF] text-white text-[10px] font-black px-3 py-1 rounded-full">BEFORE</div>
-                        </div>
-                        <div className="w-1/2 relative border-l-2 border-white">
-                            <img src="/photo_testimonial_2.jpg" className="w-full h-full object-cover" alt="After" />
-                            <div className="absolute top-4 right-4 bg-[#01C2D4] text-white text-[10px] font-black px-3 py-1 rounded-full">AFTER</div>
-                            <div className="absolute top-1/2 -left-6 -translate-y-1/2">
-                                <svg className="w-12 h-12 text-white drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M13.22 19.03a.75.75 0 0 1 0-1.06L14.66 16.5H4.75a.75.75 0 0 1 0-1.5h9.91l-1.44-1.47a.75.75 0 1 1 1.06-1.06l2.75 2.81a.75.75 0 0 1 0 1.06l-2.75 2.81a.75.75 0 0 1-1.06 0z" />
-                                </svg>
+                {/* Impact Image Slider */}
+                <div className="w-full relative rounded-3xl overflow-hidden shadow-xl mb-6 border border-slate-100 bg-white">
+                    <div className="relative h-64 w-full">
+                        {testimonials.map((t, i) => (
+                            <div
+                                key={i}
+                                className={`absolute inset-0 transition-opacity duration-1000 ${i === activeTestimonial ? 'opacity-100' : 'opacity-0'}`}
+                            >
+                                <img src={t.img} className="w-full h-full object-cover" alt={t.name} />
+                                <div className="absolute top-4 left-4 bg-cyan-500 text-white text-[10px] font-black px-3 py-1 rounded-full shadow-lg">TRANSFORMATION</div>
                             </div>
-                        </div>
+                        ))}
                     </div>
 
-                    <div className="p-6 bg-white">
+                    <div className="p-5">
                         <div className="flex justify-between items-center mb-2">
-                            <span className="font-bold text-slate-900">Lisa, 52</span>
+                            <span className="font-bold text-slate-900 text-lg">{testimonials[activeTestimonial].name}, {testimonials[activeTestimonial].age}</span>
                             <div className="flex space-x-0.5">
-                                {[1, 2, 3, 4, 5].map(s => <Star key={s} className="w-3.5 h-3.5 fill-[#00C8FF] text-[#00C8FF]" />)}
+                                {[1, 2, 3, 4, 5].map(s => <Star key={s} className="w-3.5 h-3.5 fill-cyan-400 text-cyan-400" />)}
                             </div>
                         </div>
-                        <h3 className="font-black text-lg text-slate-900 mb-1">Worth every penny</h3>
-                        <p className="text-slate-500 text-sm leading-relaxed">
-                            I used to try random products with no results. With Mesu PRO, I finally understand what my hair needs.
+                        <p className="text-slate-600 text-sm leading-relaxed italic font-medium">
+                            "{testimonials[activeTestimonial].text}"
                         </p>
+
+                        {/* Dot Indicators */}
+                        <div className="flex justify-center space-x-1.5 mt-4">
+                            {testimonials.map((_, i) => (
+                                <div key={i} className={`h-1.5 rounded-full transition-all duration-300 ${i === activeTestimonial ? 'w-4 bg-cyan-500' : 'w-1.5 bg-slate-200'}`} />
+                            ))}
+                        </div>
                     </div>
                 </div>
 
                 {/* Pricing & CTA */}
                 <div className="w-full mt-auto space-y-4">
                     <div className="text-center">
-                        <p className="text-[#00C8FF] font-black text-lg">
-                            FREE for 3 days, <span className="text-slate-50 text-[5px] opacity-10 font-thin">then $39.90 billed monthly.</span>
+                        <p className="text-cyan-600 font-bold text-base">
+                            FREE for 3 days, <span className="text-slate-500 font-medium">then $39.90 billed monthly.</span>
                         </p>
                     </div>
 
