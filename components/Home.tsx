@@ -4,7 +4,7 @@ import { SURVEY_STEPS } from '../constants';
 import { AnalysisLoader } from './AnalysisLoader';
 import { ReportView } from './ReportView';
 import { AnalysisResult } from '../types';
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 import { Paywall } from './Paywall';
 import { PrivacyPolicy } from './PrivacyPolicy';
 import { TermsOfService } from './TermsOfService';
@@ -59,10 +59,15 @@ export const Home = () => {
 
   const sendToWebhook = async (result: AnalysisResult) => {
     const webhookUrl = (import.meta as any).env.VITE_N8N_WEBHOOK_URL || (import.meta as any).env.VITE_WEBHOOK_URL;
-    if (!webhookUrl) return;
+    if (!webhookUrl) {
+      console.log("No webhook URL configured");
+      return;
+    }
+
+    console.log("Sending data to webhook...", webhookUrl);
 
     try {
-      await fetch(webhookUrl, {
+      const response = await fetch(webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -71,6 +76,7 @@ export const Home = () => {
           timestamp: new Date().toISOString()
         })
       });
+      console.log("Webhook response status:", response.status);
     } catch (e) {
       console.error("Webhook failed", e);
     }
@@ -156,66 +162,78 @@ export const Home = () => {
 
     try {
       const apiKey = (import.meta as any).env.VITE_GEMINI_API_KEY || (import.meta as any).env.GEMINI_API_KEY;
-      const ai = new GoogleGenAI({ apiKey });
+      const genAI = new GoogleGenerativeAI(apiKey);
+
+      const model = genAI.getGenerativeModel({
+        model: "gemini-1.5-flash",
+        generationConfig: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: SchemaType.OBJECT,
+            properties: {
+              hairWellnessScore: { type: SchemaType.NUMBER },
+              hairWellnessLabel: { type: SchemaType.STRING },
+              textureScore: { type: SchemaType.NUMBER },
+              textureLabel: { type: SchemaType.STRING },
+              porosity: { type: SchemaType.STRING },
+              densityScore: { type: SchemaType.NUMBER },
+              volumeScore: { type: SchemaType.NUMBER },
+              shineScore: { type: SchemaType.NUMBER },
+              splitEndsScore: { type: SchemaType.NUMBER },
+              breakageScore: { type: SchemaType.NUMBER },
+              frizzScore: { type: SchemaType.NUMBER },
+              flakinessScore: { type: SchemaType.NUMBER },
+              scalpWellnessScore: { type: SchemaType.NUMBER },
+              coverageAwarenessScore: { type: SchemaType.NUMBER },
+              hairlineAwarenessScore: { type: SchemaType.NUMBER },
+              summary: { type: SchemaType.STRING },
+              twelveWeekPlan: {
+                type: SchemaType.ARRAY,
+                items: {
+                  type: SchemaType.OBJECT,
+                  properties: {
+                    week: { type: SchemaType.NUMBER },
+                    focus: { type: SchemaType.STRING },
+                    description: { type: SchemaType.STRING }
+                  },
+                  required: ["week", "focus", "description"]
+                }
+              }
+            },
+            required: ["hairWellnessScore", "hairWellnessLabel", "twelveWeekPlan"]
+          }
+        },
+      });
 
       const parts: any[] = [{ text: promptText }];
 
       const photoData = answers.photo_upload;
       if (photoData) {
         if (photoData.front) {
-          const base64Data = photoData.front.split(',')[1];
-          parts.push({ inlineData: { mimeType: 'image/jpeg', data: base64Data } });
+          parts.push({
+            inlineData: {
+              mimeType: 'image/jpeg',
+              data: photoData.front.split(',')[1]
+            }
+          });
         }
         if (photoData.side) {
-          const base64Data = photoData.side.split(',')[1];
-          parts.push({ inlineData: { mimeType: 'image/jpeg', data: base64Data } });
+          parts.push({
+            inlineData: {
+              mimeType: 'image/jpeg',
+              data: photoData.side.split(',')[1]
+            }
+          });
         }
       }
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-1.5-flash',
-        contents: { parts: parts },
-        config: {
-          responseMimeType: "application/json",
-          responseSchema: {
-            type: Type.OBJECT,
-            properties: {
-              hairWellnessScore: { type: Type.NUMBER },
-              hairWellnessLabel: { type: Type.STRING },
-              textureScore: { type: Type.NUMBER },
-              textureLabel: { type: Type.STRING },
-              porosity: { type: Type.STRING, enum: ["Low", "Medium", "High"] },
-              densityScore: { type: Type.NUMBER },
-              volumeScore: { type: Type.NUMBER },
-              shineScore: { type: Type.NUMBER },
-              splitEndsScore: { type: Type.NUMBER },
-              breakageScore: { type: Type.NUMBER },
-              frizzScore: { type: Type.NUMBER },
-              flakinessScore: { type: Type.NUMBER },
-              scalpWellnessScore: { type: Type.NUMBER },
-              coverageAwarenessScore: { type: Type.NUMBER },
-              hairlineAwarenessScore: { type: Type.NUMBER },
-              summary: { type: Type.STRING },
-              twelveWeekPlan: {
-                type: Type.ARRAY,
-                items: {
-                  type: Type.OBJECT,
-                  properties: {
-                    week: { type: Type.NUMBER },
-                    focus: { type: Type.STRING },
-                    description: { type: Type.STRING }
-                  }
-                }
-              }
-            }
-          }
-        }
-      });
+      const result = await model.generateContent(parts);
+      const text = result.response.text();
 
-      if (response.text) {
-        const result = JSON.parse(response.text) as AnalysisResult;
-        setAnalysisData(result);
-        await sendToWebhook(result);
+      if (text) {
+        const analysisResult = JSON.parse(text) as AnalysisResult;
+        setAnalysisData(analysisResult);
+        await sendToWebhook(analysisResult);
         setIsApiFinished(true);
       }
     } catch (error) {

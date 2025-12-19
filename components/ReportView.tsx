@@ -47,30 +47,49 @@ export const ReportView: React.FC<ReportViewProps> = ({ data, onUnlock }) => {
          <div className="px-6 py-6 space-y-8 font-sans">
 
             {/* 12-Week Plan (Locked) */}
-            <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 relative overflow-hidden group">
-               <div className="flex items-center space-x-2 mb-4 text-cyan-600 font-bold">
-                  <Lock className="w-5 h-5" />
-                  <span>12-Week Transformation Plan</span>
-               </div>
+            <div className="relative overflow-hidden rounded-[2.5rem] bg-white p-8 shadow-2xl shadow-cyan-100 border border-cyan-50 group">
+               {/* Background Decorative Gradient */}
+               <div className="absolute -right-20 -top-20 h-40 w-40 rounded-full bg-cyan-100/50 blur-3xl transition-all group-hover:scale-150 duration-700" />
+               <div className="absolute -left-20 -bottom-20 h-40 w-40 rounded-full bg-blue-50/50 blur-3xl transition-all group-hover:scale-150 duration-700" />
 
-               <div className="space-y-4 blur-[3px] pointer-events-none opacity-40">
-                  {[1, 2, 3].map(i => (
-                     <div key={i} className="border-l-2 border-slate-200 pl-4 py-1">
-                        <div className="h-3 w-20 bg-slate-200 rounded mb-2" />
-                        <div className="h-2 w-full bg-slate-100 rounded" />
-                     </div>
-                  ))}
-               </div>
+               <div className="relative z-10 flex flex-col items-center text-center">
+                  <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-cyan-50 text-cyan-500 shadow-inner">
+                     <Lock className="h-8 w-8" />
+                  </div>
 
-               <div className="absolute inset-0 bg-white/60 flex flex-col items-center justify-center p-6 text-center">
-                  <h3 className="text-xl font-black text-slate-900 mb-2">Routine Locked</h3>
-                  <p className="text-sm text-slate-500 mb-6">Unlock to see your day-by-day roadmap and product recommendations.</p>
+                  <span className="mb-1 text-[10px] font-black uppercase tracking-[0.2em] text-cyan-400">
+                     12-Week Transformation Plan
+                  </span>
+
+                  <h3 className="mb-4 text-3xl font-black text-slate-900 leading-tight">
+                     Your Routine is<br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600">Locked</span>
+                  </h3>
+
+                  <p className="mb-8 max-w-[240px] text-sm font-medium text-slate-400 leading-relaxed">
+                     Unlock your day-by-day roadmap, personalized product list, and expert growth guides.
+                  </p>
+
                   <button
                      onClick={onUnlock}
-                     className="bg-cyan-500 text-white font-black py-4 px-10 rounded-full shadow-lg shadow-cyan-100 active:scale-95 transition-all text-sm uppercase tracking-wider"
+                     className="group/btn relative w-full overflow-hidden rounded-full bg-cyan-500 p-[2px] transition-all hover:shadow-cyan-200 active:scale-95 shadow-xl shadow-cyan-100/50"
                   >
-                     Reveal My Plan
+                     <div className="relative z-10 rounded-full bg-cyan-500 px-8 py-4 text-base font-black uppercase tracking-widest text-white transition-colors group-hover/btn:bg-transparent">
+                        Reveal My Plan
+                     </div>
                   </button>
+               </div>
+
+               {/* Mock Content underneath for depth */}
+               <div className="mt-8 space-y-4 blur-[4px] pointer-events-none opacity-10 select-none">
+                  {[1, 2].map(i => (
+                     <div key={i} className="flex items-start space-x-3">
+                        <div className="h-10 w-10 shrink-0 rounded-xl bg-slate-200" />
+                        <div className="flex-1 space-y-2 py-1">
+                           <div className="h-3 w-24 bg-slate-200 rounded" />
+                           <div className="h-2 w-full bg-slate-100 rounded" />
+                        </div>
+                     </div>
+                  ))}
                </div>
             </div>
 
