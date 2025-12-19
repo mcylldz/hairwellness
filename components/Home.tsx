@@ -173,7 +173,7 @@ export const Home = () => {
       }
 
       const response = await ai.models.generateContent({
-        model: 'gemini-1.5-flash-latest',
+        model: 'gemini-1.5-flash',
         contents: { parts: parts },
         config: {
           responseMimeType: "application/json",
@@ -239,6 +239,7 @@ export const Home = () => {
         summary: "We encountered an issue analyzing the specific details, but based on your quiz, your hair needs hydration and scalp care.",
         twelveWeekPlan: []
       });
+      setIsApiFinished(true);
     }
   };
 

@@ -102,7 +102,7 @@ export const AnalysisLoader: React.FC<AnalysisLoaderProps> = ({
       <div className="flex justify-center space-x-8 mt-12 text-slate-300 text-[10px] font-bold uppercase tracking-widest">
         <button onClick={onPrivacy}>Privacy</button>
         <button onClick={onTerms}>Terms</button>
-        <button onClick={onSubscription}>Restore</button>
+        <button onClick={onSubscription}>Subscription</button>
       </div>
     </div>
   );

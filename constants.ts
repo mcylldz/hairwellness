@@ -403,23 +403,6 @@ export const SURVEY_STEPS: SurveyQuestion[] = [
     ]
   },
   {
-    id: 'social_proof',
-    type: 'testimonials',
-    title: "See real results from people like you.",
-    subtitle: "Hear from women who have transformed their hair with personalized care.",
-    testimonials: [
-      {
-        id: 1,
-        name: "Jessica",
-        age: 38,
-        timeframe: "4 months with Mesu",
-        result: "After just a few months, my hair feels stronger and looks shinier than it has in years. The personalized routine made all the difference.",
-        beforeImage: "/photo_testimonial_1.jpg",
-        afterImage: "/photo_testimonial_2.jpg"
-      }
-    ]
-  },
-  {
     id: 'scan_intro',
     type: 'info-carousel',
     title: "Next, let's take pictures of your hair.",

@@ -109,7 +109,7 @@ export const Paywall: React.FC<PaywallProps> = ({ onSuccess, onClose, onPrivacy,
                 <div className="flex space-x-8 mt-12 text-slate-300 text-[10px] font-bold uppercase tracking-widest">
                     <button onClick={onPrivacy}>Privacy</button>
                     <button onClick={onTerms}>Terms</button>
-                    <button onClick={onSubscription}>Restore</button>
+                    <button onClick={onSubscription}>Subscription</button>
                 </div>
 
             </div>
