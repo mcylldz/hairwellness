@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, ArrowRight, Check, Camera, Trash2 } from 'lucide-react';
 import { SURVEY_STEPS } from '../constants';
 import { AnalysisLoader } from './AnalysisLoader';
@@ -10,11 +10,12 @@ import { PrivacyPolicy } from './PrivacyPolicy';
 import { TermsOfService } from './TermsOfService';
 import { SubscriptionPolicy } from './SubscriptionPolicy';
 
-export const Home: React.FC = () => {
+export const Home = () => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [testimonialIndex, setTestimonialIndex] = useState(0);
   const [infoCarouselIndex, setInfoCarouselIndex] = useState(0);
   const [checklistIndex, setChecklistIndex] = useState(0);
+  const yearPickerRef = useRef<HTMLDivElement>(null);
   const [answers, setAnswers] = useState<Record<string, any>>({
     birth_year: 1999
   });
@@ -41,6 +42,17 @@ export const Home: React.FC = () => {
 
     setInfoCarouselIndex(0);
     setChecklistIndex(0);
+    setTestimonialIndex(0);
+  }, [currentStepIndex]);
+
+  // Scroll to selected year on year-picker step
+  useEffect(() => {
+    if (currentStep.type === 'year-picker' && yearPickerRef.current) {
+      const selectedBtn = yearPickerRef.current.querySelector('[data-selected="true"]');
+      if (selectedBtn) {
+        selectedBtn.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }
+    }
   }, [currentStepIndex]);
 
   const getAnswer = (key: string) => answers[key];
@@ -362,12 +374,16 @@ export const Home: React.FC = () => {
     const selectedYear = getAnswer(currentStep.id);
 
     return (
-      <div className="h-80 w-full overflow-y-auto no-scrollbar snap-y snap-mandatory py-32 flex flex-col items-center space-y-4 mask-gradient">
+      <div
+        ref={yearPickerRef}
+        className="h-80 w-full overflow-y-auto no-scrollbar snap-y snap-mandatory py-32 flex flex-col items-center space-y-4 mask-gradient"
+      >
         {years.map((year) => {
           const isSelected = selectedYear === year;
           return (
             <button
               key={year}
+              data-selected={isSelected}
               onClick={() => updateAnswer(year)}
               className={`snap-center transition-all duration-300 px-8 py-2
                 ${isSelected
@@ -379,14 +395,19 @@ export const Home: React.FC = () => {
               {year}
             </button>
           );
-        })}
-      </div>
+        })
+        }
+      </div >
     );
   };
 
   const renderTestimonials = () => {
     const testimonials = currentStep.testimonials || [];
-    const activeTestimonial = testimonials[testimonialIndex];
+    // Safety check for stale index during transition
+    const safeIndex = testimonialIndex >= testimonials.length ? 0 : testimonialIndex;
+    const activeTestimonial = testimonials[safeIndex];
+
+    if (!activeTestimonial) return null;
 
     return (
       <div className="w-full flex flex-col space-y-6">
@@ -434,7 +455,9 @@ export const Home: React.FC = () => {
 
   const renderInfoCarousel = () => {
     const slides = currentStep.infoSlides || [];
-    const activeSlide = slides[infoCarouselIndex];
+    // Safety check for stale index
+    const safeIndex = infoCarouselIndex >= slides.length ? 0 : infoCarouselIndex;
+    const activeSlide = slides[safeIndex];
     const imageToDisplay = activeSlide?.imageSrc || currentStep.imageSrc;
 
     return (
@@ -493,7 +516,11 @@ export const Home: React.FC = () => {
 
   const renderChecklistCarousel = () => {
     const phases = currentStep.journeyPhases || [];
-    const activePhase = phases[checklistIndex];
+    // Safety check for stale index
+    const safeIndex = checklistIndex >= phases.length ? 0 : checklistIndex;
+    const activePhase = phases[safeIndex];
+
+    if (!activePhase) return null;
 
     return (
       <div className="flex flex-col items-center space-y-6 py-4">
