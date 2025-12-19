@@ -13,7 +13,8 @@ export const Paywall: React.FC<PaywallProps> = ({ onSuccess, onClose, onPrivacy,
     const handleCheckout = () => {
         const stripeLink = (import.meta as any).env.VITE_STRIPE_PAYMENT_LINK ||
             (import.meta as any).env.VITE_STRIPE_URL ||
-            (window as any)._env_?.STRIPE_PAYMENT_LINK;
+            (window as any)._env_?.STRIPE_PAYMENT_LINK ||
+            (window as any).process?.env?.STRIPE_PAYMENT_LINK;
 
         console.log("Attempting checkout with link:", stripeLink);
 
@@ -108,9 +109,12 @@ export const Paywall: React.FC<PaywallProps> = ({ onSuccess, onClose, onPrivacy,
 
                 {/* Pricing & CTA */}
                 <div className="w-full mt-auto space-y-4">
-                    <div className="text-center">
-                        <p className="text-cyan-600 font-bold text-base">
-                            FREE for 3 days, <span className="text-slate-500 font-medium">then $39.90 billed monthly.</span>
+                    <div className="text-center space-y-2 mb-2">
+                        <p className="text-cyan-500 font-black text-2xl uppercase tracking-tighter">
+                            FREE for 3 days
+                        </p>
+                        <p style={{ fontSize: '12px', color: 'oklch(0.89 0.03 257.78)' }} className="leading-snug px-2 font-medium">
+                            You will be charged a monthly fee of $39.00 from the day your free trial ends. You can cancel your subscription either before your free trial ends or after the free trial has ended.
                         </p>
                     </div>
 
