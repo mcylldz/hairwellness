@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Lock, Users, ArrowDownNarrowWide, Activity, LogOut, ChevronRight } from 'lucide-react';
+import { Lock, Users, ArrowDownNarrowWide, Activity, LogOut, ChevronRight, Bug } from 'lucide-react';
 import { SURVEY_STEPS } from '../constants';
 
 export const Admin: React.FC = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [password, setPassword] = useState('');
     const [stats, setStats] = useState<any>(null);
+    const [rawData, setRawData] = useState<any>(null);
     const [loading, setLoading] = useState(false);
 
     const loginCode = (import.meta as any).env.VITE_LOGIN_CODE || 'admin123';
@@ -20,6 +21,26 @@ export const Admin: React.FC = () => {
         }
     };
 
+    const tryParse = (data: any): any => {
+        if (typeof data === 'string') {
+            try {
+                return tryParse(JSON.parse(data));
+            } catch (e) {
+                return data;
+            }
+        }
+        if (Array.isArray(data)) {
+            // If strictly one element, unwrap it
+            if (data.length === 1) return tryParse(data[0]);
+            return data;
+        }
+        // Check for common wrappers like { data: ... } or { output: ... } if they exist and seem to wrap the real content
+        if (data && typeof data === 'object' && !data.totalVisits && data.data) {
+            return tryParse(data.data);
+        }
+        return data;
+    }
+
     const fetchStats = async () => {
         setLoading(true);
         const statsUrl = (import.meta as any).env.VITE_STATS_URL;
@@ -29,13 +50,20 @@ export const Admin: React.FC = () => {
                 // Add timestamp to prevent caching
                 const res = await fetch(`${statsUrl}?t=${Date.now()}`);
                 const data = await res.json();
-                // n8n returns an array by default, unwrap if necessary
-                const finalData = Array.isArray(data) ? data[0] : data;
-                setStats(finalData);
+
+                console.log("Raw Admin Data:", data);
+                setRawData(data); // Save for debug view
+
+                const parsed = tryParse(data);
+                console.log("Parsed Admin Data:", parsed);
+
+                setStats(parsed);
             } catch (e) {
                 console.error("Failed to fetch stats", e);
-                // Fallback to dummy for demo
-                generateDummyStats();
+                // Fallback to dummy for demo if fetch totally fails (network error)
+                // But if we got a response that just failed to parse, we might want to see that.
+                // For now, let's only generate dummy if we have NO data.
+                if (!stats) generateDummyStats();
             }
         } else {
             generateDummyStats();
@@ -172,6 +200,23 @@ export const Admin: React.FC = () => {
                 <p className="text-center text-[10px] text-slate-300 font-bold uppercase tracking-[0.2em] mt-8">
                     Data updates in real-time via n8n analytics
                 </p>
+
+                {/* DEBUG SECTION */}
+                <div className="mt-8 border-t border-slate-200 pt-8">
+                    <details className="group">
+                        <summary className="flex items-center cursor-pointer text-xs font-bold text-slate-400 uppercase tracking-widest hover:text-cyan-500 transition-colors">
+                            <Bug className="w-4 h-4 mr-2" />
+                            Debug Raw Data
+                        </summary>
+                        <div className="mt-4 bg-slate-900 text-slate-50 p-4 rounded-xl overflow-x-auto text-[10px] font-mono leading-relaxed shadow-inner">
+                            <p className="mb-2 text-slate-400">Raw JSON received from n8n:</p>
+                            <pre>{JSON.stringify(rawData, null, 2)}</pre>
+                            <p className="mt-4 mb-2 text-slate-400 border-t border-slate-800 pt-2">Parsed Object used in UI:</p>
+                            <pre>{JSON.stringify(stats, null, 2)}</pre>
+                        </div>
+                    </details>
+                </div>
+
             </main>
         </div>
     );
