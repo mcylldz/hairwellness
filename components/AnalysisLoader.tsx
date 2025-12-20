@@ -42,8 +42,8 @@ export const AnalysisLoader: React.FC<AnalysisLoaderProps> = ({
 
         if (currentStep.progress < 100) {
           // Increment progress
-          // Randomize speed a bit for realism
-          currentStep.progress += Math.floor(Math.random() * 5) + 2;
+          // Faster speed for "extremely fast" feel
+          currentStep.progress += Math.floor(Math.random() * 10) + 5;
           currentStep.status = 'active';
 
           if (currentStep.progress >= 100) {
@@ -53,7 +53,7 @@ export const AnalysisLoader: React.FC<AnalysisLoaderProps> = ({
         }
         return newSteps;
       });
-    }, 50);
+    }, 30);
 
     // If current step reached 100%, move to next
     if (steps[currentStepIndex].progress >= 100) {
