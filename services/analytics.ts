@@ -2,7 +2,7 @@ import { PixelService } from './pixel';
 
 export const AnalyticsService = {
     logStep: async (stepIndex: number, stepName: string, answers: any) => {
-        const webhookUrl = (import.meta as any).env.VITE_ANALYTICS_WEBHOOK_URL || (import.meta as any).env.VITE_N8N_WEBHOOK_URL;
+        const webhookUrl = (import.meta as any).env.VITE_ANALYTICS_WEBHOOK_URL;
         if (!webhookUrl) return;
 
         const pixelData = await PixelService.getPixelData();
@@ -30,7 +30,7 @@ export const AnalyticsService = {
     },
 
     logEvent: async (eventName: string, data?: any) => {
-        const webhookUrl = (import.meta as any).env.VITE_ANALYTICS_WEBHOOK_URL || (import.meta as any).env.VITE_N8N_WEBHOOK_URL;
+        const webhookUrl = (import.meta as any).env.VITE_ANALYTICS_WEBHOOK_URL;
         if (!webhookUrl) return;
 
         const pixelData = await PixelService.getPixelData();
