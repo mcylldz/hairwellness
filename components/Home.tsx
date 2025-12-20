@@ -9,6 +9,7 @@ import { Paywall } from './Paywall';
 import { PrivacyPolicy } from './PrivacyPolicy';
 import { TermsOfService } from './TermsOfService';
 import { SubscriptionPolicy } from './SubscriptionPolicy';
+import { X } from 'lucide-react';
 
 export const Home = () => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -23,6 +24,9 @@ export const Home = () => {
   // App States
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisData, setAnalysisData] = useState<AnalysisResult | null>(null);
+  const [isPolicyOpen, setIsPolicyOpen] = useState<'privacy' | 'terms' | 'subscription' | null>(null);
+  const [debugMode, setDebugMode] = useState(false);
+  const [debugClicks, setDebugClicks] = useState(0);
   const [isApiFinished, setIsApiFinished] = useState(false);
   const [showReport, setShowReport] = useState(false);
   const [showPaywall, setShowPaywall] = useState(false);
@@ -58,7 +62,7 @@ export const Home = () => {
   const getAnswer = (key: string) => answers[key];
 
   const sendToWebhook = async (result: AnalysisResult) => {
-    const webhookUrl = (import.meta as any).env.VITE_N8N_WEBHOOK_URL || (import.meta as any).env.VITE_WEBHOOK_URL || (window as any)._env_?.VITE_N8N_WEBHOOK_URL;
+    const webhookUrl = (import.meta as any).env.VITE_N8N_WEBHOOK_URL || (import.meta as any).env.VITE_WEBHOOK_URL || (window as any)._env_?.VITE_N8N_WEBHOOK_URL || (window as any)._env_?.N8N_WEBHOOK_URL;
     if (!webhookUrl) {
       console.log("No webhook URL configured");
       return;
@@ -162,6 +166,8 @@ export const Home = () => {
 
     try {
       const apiKey = (import.meta as any).env.VITE_GEMINI_API_KEY || (import.meta as any).env.GEMINI_API_KEY || (window as any)._env_?.VITE_GEMINI_API_KEY;
+
+      // FORCE v1 API
       const genAI = new GoogleGenerativeAI(apiKey);
 
       const model = genAI.getGenerativeModel({
@@ -203,7 +209,7 @@ export const Home = () => {
             required: ["hairWellnessScore", "hairWellnessLabel", "twelveWeekPlan"]
           }
         },
-      });
+      }, { apiVersion: 'v1' });
 
       const parts: any[] = [{ text: promptText }];
 
@@ -543,6 +549,67 @@ export const Home = () => {
 
     return (
       <div className="flex flex-col items-center space-y-6 py-4">
+        <header className="px-6 py-6 flex justify-between items-center border-b border-slate-50 bg-white sticky top-0 z-20">
+          <button
+            onClick={() => {
+              setDebugClicks(prev => {
+                if (prev + 1 >= 5) {
+                  setDebugMode(true);
+                  return 0;
+                }
+                return prev + 1;
+              });
+            }}
+            className="flex flex-col select-none active:opacity-70 transition-opacity"
+          >
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-500 mb-0.5">Hair Wellness AI</span>
+            <h1 className="text-xl font-black text-slate-900 leading-none">Mesu</h1>
+          </button>
+
+          <div className="flex items-center space-x-1.5 px-3 py-1.5 bg-slate-50 rounded-full border border-slate-100">
+            <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+            <span className="text-[10px] font-black text-slate-500 uppercase tracking-wider">Expert Analysis</span>
+          </div>
+        </header>
+
+        {/* Debug Modal */}
+        {debugMode && (
+          <div className="fixed inset-0 z-[100] bg-slate-900/95 flex items-center justify-center p-6 text-white font-mono text-[10px]">
+            <div className="w-full max-w-sm bg-slate-800 rounded-2xl p-6 relative">
+              <button
+                onClick={() => setDebugMode(false)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              <h2 className="text-sm font-bold mb-4 text-cyan-400">DEBUG INFO (Env Vars)</h2>
+              <div className="space-y-4">
+                <div>
+                  <div className="text-slate-400 mb-1">VITE_GEMINI_API_KEY:</div>
+                  <div className="break-all bg-slate-900 p-2 rounded">
+                    {(import.meta as any).env.VITE_GEMINI_API_KEY ? "EXISTS" : "MISSING"} ({(import.meta as any).env.VITE_GEMINI_API_KEY?.substring(0, 5)}...)
+                  </div>
+                </div>
+                <div>
+                  <div className="text-slate-400 mb-1">VITE_STRIPE_PAYMENT_LINK:</div>
+                  <div className="break-all bg-slate-900 p-2 rounded">
+                    {(import.meta as any).env.VITE_STRIPE_PAYMENT_LINK || (window as any)._env_?.VITE_STRIPE_PAYMENT_LINK ? "EXISTS" : "MISSING"}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-slate-400 mb-1">VITE_N8N_WEBHOOK_URL:</div>
+                  <div className="break-all bg-slate-900 p-2 rounded">
+                    {(import.meta as any).env.VITE_N8N_WEBHOOK_URL || (window as any)._env_?.VITE_N8N_WEBHOOK_URL ? "EXISTS" : "MISSING"}
+                  </div>
+                </div>
+                <div className="p-3 bg-red-900/30 border border-red-500/30 rounded text-red-200">
+                  IMPORTANT: If values are MISSING, ensure they start with "VITE_" in Netlify settings.
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="w-full aspect-[16/10] relative rounded-2xl overflow-hidden shadow-lg">
           <img
             src={activePhase.imageSrc}

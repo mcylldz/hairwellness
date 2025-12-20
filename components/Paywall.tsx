@@ -11,17 +11,21 @@ interface PaywallProps {
 
 export const Paywall: React.FC<PaywallProps> = ({ onSuccess, onClose, onPrivacy, onTerms, onSubscription }) => {
     const handleCheckout = () => {
+        // PRIORITIZE VITE_ PREFIXED VARS
         const stripeLink = (import.meta as any).env.VITE_STRIPE_PAYMENT_LINK ||
             (import.meta as any).env.VITE_STRIPE_URL ||
+            (window as any)._env_?.VITE_STRIPE_PAYMENT_LINK ||
             (window as any)._env_?.STRIPE_PAYMENT_LINK ||
-            (window as any).process?.env?.STRIPE_PAYMENT_LINK;
+            (window as any).process?.env?.VITE_STRIPE_PAYMENT_LINK;
 
-        console.log("Attempting checkout with link:", stripeLink);
+        console.log("Stripe Checkout Link Check:", stripeLink ? "FOUND" : "NOT FOUND");
 
         if (stripeLink) {
+            // Stripe typically blocks iframes/popups, so we use a direct redirect for reliability
             window.location.href = stripeLink;
         } else {
-            console.error("STRIPE_PAYMENT_LINK not found. Fallback to success page for testing.");
+            console.error("CRITICAL: VITE_STRIPE_PAYMENT_LINK is missing in environment variables.");
+            alert("Payment link is not configured. Please check your Netlify environment variables (must start with VITE_).");
             onSuccess();
         }
     };
