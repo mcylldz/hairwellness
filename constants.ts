@@ -64,7 +64,8 @@ export const SURVEY_STEPS: SurveyQuestion[] = [
   {
     id: 'gender',
     type: 'single-select',
-    title: "Let's get to know you a little better.\nHow do you identify?",
+    preTitle: "Let's get to know you a little better.",
+    title: "How do you identify?",
     options: [
       { id: 'woman', label: "Woman" },
       { id: 'man', label: "Man" },
@@ -76,7 +77,8 @@ export const SURVEY_STEPS: SurveyQuestion[] = [
   {
     id: 'health_changes',
     type: 'single-select',
-    title: "Let's get to know you a little better.\nAre you experiencing any health changes?",
+    preTitle: "Let's get to know you a little better.",
+    title: "Are you experiencing any health changes?",
     options: [
       { id: 'none', label: "No significant changes" },
       { id: 'age_related', label: "Age-related changes (hair pattern changes)" },
@@ -141,7 +143,8 @@ export const SURVEY_STEPS: SurveyQuestion[] = [
   {
     id: 'current_hair_status',
     type: 'single-select',
-    title: "Next, let's start building your hair profile.\nHow would you describe your hair right now?",
+    preTitle: "Next, let's start building your hair profile.",
+    title: "How would you describe your hair right now?",
     options: [
       { id: 'happy', label: "Happy with my hair, just want to optimize" },
       { id: 'okay', label: "It's okay, but it could be better" },

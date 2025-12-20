@@ -41,9 +41,8 @@ export const AnalysisLoader: React.FC<AnalysisLoaderProps> = ({
         const currentStep = newSteps[currentStepIndex];
 
         if (currentStep.progress < 100) {
-          // Increment progress
-          // Faster speed for "extremely fast" feel
-          currentStep.progress += Math.floor(Math.random() * 10) + 5;
+          // Variable speed for realism (approx 2s per step)
+          currentStep.progress += Math.random() * 2.5 + 0.5;
           currentStep.status = 'active';
 
           if (currentStep.progress >= 100) {
@@ -61,7 +60,7 @@ export const AnalysisLoader: React.FC<AnalysisLoaderProps> = ({
       // Small delay before starting next step
       setTimeout(() => {
         setCurrentStepIndex(prev => prev + 1);
-      }, 200);
+      }, Math.random() * 500 + 200);
     }
 
     return () => clearInterval(interval);
