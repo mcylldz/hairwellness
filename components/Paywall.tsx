@@ -1,5 +1,6 @@
 import React from 'react';
 import { Check, Star, ArrowRight, ShieldCheck } from 'lucide-react';
+import { PixelService } from '../services/pixel';
 
 interface PaywallProps {
     onSuccess: () => void;
@@ -11,6 +12,9 @@ interface PaywallProps {
 
 export const Paywall: React.FC<PaywallProps> = ({ onSuccess, onClose, onPrivacy, onTerms, onSubscription }) => {
     const handleCheckout = () => {
+        // Track InitiateCheckout
+        PixelService.track('InitiateCheckout', { currency: 'USD', value: 49.00 });
+
         // PRIORITIZE VITE_ PREFIXED VARS
         const stripeLink = (import.meta as any).env.VITE_STRIPE_PAYMENT_LINK ||
             (import.meta as any).env.VITE_STRIPE_URL ||

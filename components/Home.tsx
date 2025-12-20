@@ -10,6 +10,8 @@ import { PrivacyPolicy } from './PrivacyPolicy';
 import { TermsOfService } from './TermsOfService';
 import { SubscriptionPolicy } from './SubscriptionPolicy';
 import { X } from 'lucide-react';
+import { PixelService } from '../services/pixel';
+import { AnalyticsService } from '../services/analytics';
 
 export const Home = () => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -42,11 +44,16 @@ export const Home = () => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('success') === 'true') {
       setShowThankYou(true);
+      PixelService.track('Purchase', { currency: 'USD', value: 49.00 }); // Assuming a mock value
+      AnalyticsService.logEvent('purchase_success');
     }
 
     setInfoCarouselIndex(0);
     setChecklistIndex(0);
     setTestimonialIndex(0);
+
+    // Track step progression for funnel (Drop-off tracking)
+    AnalyticsService.logStep(currentStepIndex, currentStep.title, answers);
   }, [currentStepIndex]);
 
   // Scroll to selected year on year-picker step
