@@ -61,24 +61,33 @@ export const Home = () => {
 
   const getAnswer = (key: string) => answers[key];
 
-  const sendToWebhook = async (result: AnalysisResult) => {
+  const sendToWebhook = async (result: AnalysisResult | null) => {
     const webhookUrl = (import.meta as any).env.VITE_N8N_WEBHOOK_URL || (import.meta as any).env.VITE_WEBHOOK_URL || (window as any)._env_?.VITE_N8N_WEBHOOK_URL || (window as any)._env_?.N8N_WEBHOOK_URL;
     if (!webhookUrl) {
-      console.log("No webhook URL configured");
+      console.log("No webhook URL configured (VITE_N8N_WEBHOOK_URL)");
       return;
     }
 
-    console.log("Sending data to webhook...", webhookUrl);
+    console.log("Sending data to webhook:", webhookUrl);
 
     try {
+      const payload = {
+        answers: answers, // Full survey answers including photos (photo_upload)
+        preliminary_analysis: result,
+        user_metadata: {
+          userAgent: navigator.userAgent,
+          language: navigator.language,
+          timestamp: new Date().toISOString(),
+          platform: navigator.platform
+        }
+      };
+
       const response = await fetch(webhookUrl, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user: answers,
-          analysis: result,
-          timestamp: new Date().toISOString()
-        })
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
       });
       console.log("Webhook SUCCESS. Response status:", response.status);
       const respText = await response.text();
@@ -129,172 +138,49 @@ export const Home = () => {
 
   const startAnalysis = async () => {
     setIsAnalyzing(true);
+    setIsApiFinished(false);
+    setShowPaywall(false);
 
-    const promptText = `
-      You are an expert trichologist (hair specialist). Analyze the user's hair profile based on their survey answers and generate a detailed report.
-      
-      User Profile Data:
-      - Name: ${answers.name}
-      - Primary Goals: ${JSON.stringify(answers.goals)}
-      - Birth Year: ${answers.birth_year}
-      - Gender Identity: ${answers.gender}
-      - Health/Life Changes: ${answers.health_changes}
-      - Current Hair State: ${answers.current_hair_status}
-      - Desired Improvements: ${JSON.stringify(answers.improvements)}
-      - Timeline of Changes: ${answers.changes_timeline}
-      - Natural Texture: ${answers.hair_texture}
-      - Strand Thickness: ${answers.hair_thickness}
-      - Observed Density: ${answers.hair_density}
-      - Family History: ${answers.family_history}
-      - Scalp Condition: ${answers.scalp_feel}
-      - Current Length: ${answers.hair_length}
-      Analyze this hair profile and provide a detailed diagnostic in JSON format.
-      User answers: ${JSON.stringify(answers)}
-      
-      Required JSON structure:
-      - hairWellnessScore (0-100), hairWellnessLabel
-      - textureScore (0-100), textureLabel
-      - porosity ("Low", "Medium", or "High")
-      - densityScore, volumeScore, shineScore, splitEndsScore, breakageScore, frizzScore, flakinessScore, scalpWellnessScore, coverageAwarenessScore, hairlineAwarenessScore (all 0-100)
-      - summary (2-3 expert sentences)
-      - twelveWeekPlan (Array of 12 objects: { week: number, focus: string, description: string })
-      
-      IMPORTANT: Return ONLY valid JSON.
-    `;
+    console.log("Starting analysis pivot: Sending all data to n8n...");
 
-    const modelsToTry = ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-1.5-flash-8b"];
-    let finalResult: AnalysisResult | null = null;
-    let lastError: any = null;
+    // 1. Prepare Fallback Data for UI
+    const fallbackResult: AnalysisResult = {
+      hairWellnessScore: 72,
+      hairWellnessLabel: "Initial Assessment",
+      textureScore: 75,
+      textureLabel: "Normal/Dry",
+      porosity: "Medium",
+      densityScore: 65,
+      volumeScore: 60,
+      shineScore: 82,
+      splitEndsScore: 45,
+      breakageScore: 35,
+      frizzScore: 55,
+      flakinessScore: 15,
+      scalpWellnessScore: 78,
+      coverageAwarenessScore: 68,
+      hairlineAwarenessScore: 72,
+      summary: "We have received your profile and photos. A preliminary health assessment has been generated below. Our experts will review your submission and send a detailed 12-week roadmap to your email once your plan is active.",
+      twelveWeekPlan: [
+        { week: 1, focus: "Moisture Reset", description: "Beginning with a deep hydration treatment to balance scalp natural oils." },
+        { week: 2, focus: "Strength Building", description: "Focused on protein-rich treatments to fortify hair shafts and reduce breakage." }
+      ]
+    };
 
     try {
-      const apiKey = (import.meta as any).env.VITE_GEMINI_API_KEY || (import.meta as any).env.GEMINI_API_KEY || (window as any)._env_?.VITE_GEMINI_API_KEY;
-      const genAI = new GoogleGenerativeAI(apiKey);
+      // 2. Send EVERYTHING to n8n immediately
+      await sendToWebhook(fallbackResult);
 
-      // Loop through models with Schema
-      for (const modelName of modelsToTry) {
-        console.log(`Trying Gemini model: ${modelName} with Schema...`);
-        try {
-          const model = genAI.getGenerativeModel({
-            model: modelName,
-            generationConfig: {
-              responseMimeType: "application/json",
-              responseSchema: {
-                type: SchemaType.OBJECT,
-                properties: {
-                  hairWellnessScore: { type: SchemaType.NUMBER },
-                  hairWellnessLabel: { type: SchemaType.STRING },
-                  textureScore: { type: SchemaType.NUMBER },
-                  textureLabel: { type: SchemaType.STRING },
-                  porosity: { type: SchemaType.STRING },
-                  densityScore: { type: SchemaType.NUMBER },
-                  volumeScore: { type: SchemaType.NUMBER },
-                  shineScore: { type: SchemaType.NUMBER },
-                  splitEndsScore: { type: SchemaType.NUMBER },
-                  breakageScore: { type: SchemaType.NUMBER },
-                  frizzScore: { type: SchemaType.NUMBER },
-                  flakinessScore: { type: SchemaType.NUMBER },
-                  scalpWellnessScore: { type: SchemaType.NUMBER },
-                  coverageAwarenessScore: { type: SchemaType.NUMBER },
-                  hairlineAwarenessScore: { type: SchemaType.NUMBER },
-                  summary: { type: SchemaType.STRING },
-                  twelveWeekPlan: {
-                    type: SchemaType.ARRAY,
-                    items: {
-                      type: SchemaType.OBJECT,
-                      properties: {
-                        week: { type: SchemaType.NUMBER },
-                        focus: { type: SchemaType.STRING },
-                        description: { type: SchemaType.STRING }
-                      },
-                      required: ["week", "focus", "description"]
-                    }
-                  }
-                },
-                required: ["hairWellnessScore", "hairWellnessLabel", "twelveWeekPlan"]
-              }
-            },
-          }, { apiVersion: 'v1beta' });
-
-          const parts: any[] = [{ text: promptText }];
-          const photoData = answers.photo_upload;
-          if (photoData) {
-            if (photoData.front) parts.push({ inlineData: { mimeType: 'image/jpeg', data: photoData.front.split(',')[1] } });
-            if (photoData.side) parts.push({ inlineData: { mimeType: 'image/jpeg', data: photoData.side.split(',')[1] } });
-          }
-
-          const result = await model.generateContent(parts);
-          const responseText = result.response.text();
-          if (responseText) {
-            finalResult = JSON.parse(responseText);
-            console.log(`Success with ${modelName}`);
-            break;
-          }
-        } catch (e) {
-          console.warn(`${modelName} with Schema failed:`, e);
-          lastError = e;
-        }
-      }
-
-      // Final fallback: STABLE v1 WITHOUT Schema (Avoids 400 error)
-      if (!finalResult) {
-        console.log("Schema attempts failed. Trying stable v1 (plain text) fallback...");
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }, { apiVersion: 'v1' });
-        const parts: any[] = [{ text: promptText + "\nIMPORTANT: Your response must be valid JSON only. No markdown, no extra text." }];
-
-        const photoData = answers.photo_upload;
-        if (photoData) {
-          if (photoData.front) parts.push({ inlineData: { mimeType: 'image/jpeg', data: photoData.front.split(',')[1] } });
-          if (photoData.side) parts.push({ inlineData: { mimeType: 'image/jpeg', data: photoData.side.split(',')[1] } });
-        }
-
-        const result = await model.generateContent(parts);
-        const responseText = result.response.text();
-        console.log("v1 plain text response sample:", responseText.substring(0, 100));
-
-        const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-          finalResult = JSON.parse(jsonMatch[0]);
-          console.log("Success with v1 plain text fallback.");
-        }
-      }
-
-      if (finalResult) {
-        setAnalysisData(finalResult);
-        await sendToWebhook(finalResult);
-        setIsApiFinished(true);
-      } else {
-        throw new Error("All Gemini models and versions failed. Using local fallback.");
-      }
-
-    } catch (error) {
-      console.error("CRITICAL API Error", error);
-
-      const fallbackResult: AnalysisResult = {
-        hairWellnessScore: 65,
-        hairWellnessLabel: "Developing",
-        textureScore: 70,
-        textureLabel: "Normal",
-        porosity: "Medium",
-        densityScore: 60,
-        volumeScore: 55,
-        shineScore: 80,
-        splitEndsScore: 40,
-        breakageScore: 30,
-        frizzScore: 50,
-        flakinessScore: 20,
-        scalpWellnessScore: 75,
-        coverageAwarenessScore: 65,
-        hairlineAwarenessScore: 70,
-        summary: "We encountered an issue with the AI analysis. This is a preliminary report based on your quiz answers.",
-        twelveWeekPlan: [
-          { week: 1, focus: "Hydration", description: "Focus on restoring moisture balance with deep conditioning." },
-          { week: 2, focus: "Protection", description: "Implement heat protection and low-tension styles." }
-        ]
-      };
+      // 3. Simulated UX Delay (Analyzing Animation)
+      await new Promise(resolve => setTimeout(resolve, 4000));
 
       setAnalysisData(fallbackResult);
-      // ALWAYS SEND TO WEBHOOK EVEN ON FAILURE
-      await sendToWebhook(fallbackResult);
+      setIsApiFinished(true);
+      console.log("Analysis phase complete (UX simulation).");
+
+    } catch (error) {
+      console.error("Analysis/Webhook Critical Error:", error);
+      setAnalysisData(fallbackResult);
       setIsApiFinished(true);
     }
   };
