@@ -82,10 +82,12 @@ export const Home = () => {
         }
       };
 
+      // CORS BYPASS: Using 'text/plain' makes this a "Simple Request"
+      // and avoids the preflight OPTIONS check that is failing.
       const response = await fetch(webhookUrl, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'text/plain'
         },
         body: JSON.stringify(payload)
       });
