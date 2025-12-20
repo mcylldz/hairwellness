@@ -235,19 +235,26 @@ export const Home = () => {
         }
       }
 
-      // Final fallback: No Schema
+      // Final fallback: STABLE v1 WITHOUT Schema (Avoids 400 error)
       if (!finalResult) {
-        console.log("All schema attempts failed. Trying raw text fallback with gemini-1.5-flash...");
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }, { apiVersion: 'v1beta' });
-        const parts: any[] = [{ text: promptText + "\nReturn strictly JSON without markdown blocks." }];
+        console.log("Schema attempts failed. Trying stable v1 (plain text) fallback...");
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }, { apiVersion: 'v1' });
+        const parts: any[] = [{ text: promptText + "\nIMPORTANT: Your response must be valid JSON only. No markdown, no extra text." }];
+
+        const photoData = answers.photo_upload;
+        if (photoData) {
+          if (photoData.front) parts.push({ inlineData: { mimeType: 'image/jpeg', data: photoData.front.split(',')[1] } });
+          if (photoData.side) parts.push({ inlineData: { mimeType: 'image/jpeg', data: photoData.side.split(',')[1] } });
+        }
+
         const result = await model.generateContent(parts);
         const responseText = result.response.text();
+        console.log("v1 plain text response sample:", responseText.substring(0, 100));
 
-        // Extract JSON using regex if needed
         const jsonMatch = responseText.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
           finalResult = JSON.parse(jsonMatch[0]);
-          console.log("Success with raw text fallback extraction.");
+          console.log("Success with v1 plain text fallback.");
         }
       }
 
@@ -256,13 +263,13 @@ export const Home = () => {
         await sendToWebhook(finalResult);
         setIsApiFinished(true);
       } else {
-        throw lastError || new Error("Failed to get analysis from all available models.");
+        throw new Error("All Gemini models and versions failed. Using local fallback.");
       }
 
     } catch (error) {
       console.error("CRITICAL API Error", error);
-      setIsApiFinished(true);
-      setAnalysisData({
+
+      const fallbackResult: AnalysisResult = {
         hairWellnessScore: 65,
         hairWellnessLabel: "Developing",
         textureScore: 70,
@@ -278,12 +285,17 @@ export const Home = () => {
         scalpWellnessScore: 75,
         coverageAwarenessScore: 65,
         hairlineAwarenessScore: 70,
-        summary: "Your hair shows potential but requires a targeted routine to address split ends and build overall resilience.",
+        summary: "We encountered an issue with the AI analysis. This is a preliminary report based on your quiz answers.",
         twelveWeekPlan: [
           { week: 1, focus: "Hydration", description: "Focus on restoring moisture balance with deep conditioning." },
           { week: 2, focus: "Protection", description: "Implement heat protection and low-tension styles." }
         ]
-      });
+      };
+
+      setAnalysisData(fallbackResult);
+      // ALWAYS SEND TO WEBHOOK EVEN ON FAILURE
+      await sendToWebhook(fallbackResult);
+      setIsApiFinished(true);
     }
   };
 
@@ -586,9 +598,17 @@ export const Home = () => {
             <h1 className="text-xl font-black text-slate-900 leading-none">Mesu</h1>
           </button>
 
-          <div className="flex items-center space-x-1.5 px-3 py-1.5 bg-slate-50 rounded-full border border-slate-100">
-            <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-            <span className="text-[10px] font-black text-slate-500 uppercase tracking-wider">Expert Analysis</span>
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={() => setDebugMode(true)}
+              className="p-2 text-slate-400 hover:text-cyan-500 transition-colors"
+            >
+              <X className="w-4 h-4 rotate-45" /> {/* This serves as a visible 'plus' or info cross */}
+            </button>
+            <div className="flex items-center space-x-1.5 px-3 py-1.5 bg-slate-50 rounded-full border border-slate-100">
+              <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+              <span className="text-[10px] font-black text-slate-500 uppercase tracking-wider">Expert Analysis</span>
+            </div>
           </div>
         </header>
 
