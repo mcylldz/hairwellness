@@ -28,7 +28,9 @@ export const Admin: React.FC = () => {
             try {
                 const res = await fetch(statsUrl);
                 const data = await res.json();
-                setStats(data);
+                // n8n returns an array by default, unwrap if necessary
+                const finalData = Array.isArray(data) ? data[0] : data;
+                setStats(finalData);
             } catch (e) {
                 console.error("Failed to fetch stats", e);
                 // Fallback to dummy for demo
