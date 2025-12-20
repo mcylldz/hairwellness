@@ -26,7 +26,8 @@ export const Admin: React.FC = () => {
 
         if (statsUrl) {
             try {
-                const res = await fetch(statsUrl);
+                // Add timestamp to prevent caching
+                const res = await fetch(`${statsUrl}?t=${Date.now()}`);
                 const data = await res.json();
                 // n8n returns an array by default, unwrap if necessary
                 const finalData = Array.isArray(data) ? data[0] : data;
