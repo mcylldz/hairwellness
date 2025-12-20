@@ -364,8 +364,8 @@ export const Home = () => {
 
     return (
       <div className="w-full flex flex-col space-y-4">
-        {/* Reduced image size by ~30% - using fixed height instead of aspect ratio */}
-        <div className="w-full h-48 md:h-56 rounded-2xl overflow-hidden shadow-md bg-slate-100 shrink-0">
+        {/* Reduced image size further (approx 30% smaller than full width look) */}
+        <div className="w-full h-40 md:h-48 rounded-2xl overflow-hidden shadow-md bg-slate-100 shrink-0">
           <img src={activeTestimonial.beforeImage} alt={activeTestimonial.name} className="w-full h-full object-cover" />
         </div>
 
@@ -416,23 +416,23 @@ export const Home = () => {
 
     return (
       <div className="flex flex-col items-center justify-center text-center space-y-4 py-2 w-full">
-        {/* Reduced container height for 30-40% reduction */}
-        <div className="w-full max-h-[25vh] relative flex items-center justify-center">
+        {/* Fixed height container for 30-40% reduction */}
+        <div className="w-full h-40 md:h-48 relative flex items-center justify-center shrink-0">
           {imageToDisplay && (
             <img
               src={imageToDisplay}
               alt="Illustration"
-              className="max-w-full max-h-full object-contain"
+              className="w-full h-full object-contain p-2"
             />
           )}
         </div>
 
         <div className="space-y-2 max-w-sm px-4">
-          <h2 className="text-2xl font-bold leading-tight text-slate-900">
+          <h2 className="text-xl md:text-2xl font-bold leading-tight text-slate-900">
             {getTitle()}
           </h2>
           {currentStep.subtitle && (
-            <p className="text-slate-500 text-sm leading-relaxed font-medium">
+            <p className="text-slate-500 text-xs md:text-sm leading-relaxed font-medium">
               {currentStep.subtitle}
             </p>
           )}
@@ -473,22 +473,22 @@ export const Home = () => {
 
   const renderTransition = () => {
     return (
-      <div className="flex flex-col items-center justify-center text-center space-y-6 py-6 w-full h-full">
-        {/* Reduced max-height for 30% reduction */}
-        <div className="w-full max-h-[25vh] relative flex items-center justify-center">
+      <div className="flex flex-col items-center justify-center text-center space-y-4 py-4 w-full h-full">
+        {/* Fixed height container for consistency */}
+        <div className="w-full h-48 md:h-56 shrink-0 relative flex items-center justify-center px-4">
           <img
             src={currentStep.imageSrc}
             alt="Profile Building"
-            className="max-w-full max-h-full object-contain"
+            className="w-full h-full object-contain drop-shadow-sm"
           />
         </div>
 
-        <div className="space-y-3 max-w-sm px-4">
+        <div className="space-y-2 max-w-sm px-4">
           <h2 className="text-2xl md:text-3xl font-bold leading-tight text-slate-900">
             {getTitle()}
           </h2>
           {currentStep.subtitle && (
-            <p className="text-slate-500 text-base leading-relaxed font-medium">
+            <p className="text-slate-500 text-sm leading-relaxed font-medium">
               {currentStep.subtitle}
             </p>
           )}

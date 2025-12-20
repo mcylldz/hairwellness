@@ -85,7 +85,7 @@ export const AnalysisLoader: React.FC<AnalysisLoaderProps> = ({
               <span className={`font-medium text-sm ${step.status === 'completed' ? 'text-cyan-600' : 'text-slate-700'}`}>
                 {step.label}
               </span>
-              <span className="text-xs font-bold text-cyan-600">{step.progress}%</span>
+              <span className="text-xs font-bold text-cyan-600">{Math.round(step.progress)}%</span>
             </div>
             <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
               <div
