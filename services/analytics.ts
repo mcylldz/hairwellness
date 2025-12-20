@@ -20,6 +20,7 @@ export const AnalyticsService = {
             // Use text/plain bypass for analytics too
             await fetch(webhookUrl, {
                 method: 'POST',
+                mode: 'no-cors',
                 headers: { 'Content-Type': 'text/plain' },
                 body: JSON.stringify(payload)
             });
@@ -38,6 +39,7 @@ export const AnalyticsService = {
         try {
             await fetch(webhookUrl, {
                 method: 'POST',
+                mode: 'no-cors',
                 headers: { 'Content-Type': 'text/plain' },
                 body: JSON.stringify({
                     type: 'event',
