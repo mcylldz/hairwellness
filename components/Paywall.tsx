@@ -109,8 +109,8 @@ export const Paywall: React.FC<PaywallProps> = ({ onSuccess, onClose, onPrivacy,
 
                 {/* Pricing & CTA */}
                 <div className="w-full mt-auto space-y-4">
-                    <div className="text-center space-y-2 mb-2">
-                        <p className="text-cyan-500 font-black text-2xl uppercase tracking-tighter">
+                    <div className="text-center space-y-2 mb-4">
+                        <p className="text-cyan-500 font-black text-3xl uppercase tracking-tighter">
                             FREE for 3 days
                         </p>
                         <p style={{ fontSize: '12px', color: 'oklch(0.89 0.03 257.78)' }} className="leading-snug px-2 font-medium">
