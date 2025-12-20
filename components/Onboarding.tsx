@@ -45,7 +45,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
         {/* Content Wrapper for centering */}
         <div className="flex-1 flex flex-col items-center justify-center min-h-0">
           {/* Image Section - Flexible but constrained */}
-          <div className="flex-1 w-full relative flex items-center justify-center min-h-0 py-4 max-h-[60vh]">
+          <div className="flex-1 w-full relative flex items-center justify-center min-h-0 py-4 max-h-[35vh]">
             <div className="h-full w-full flex items-center justify-center relative">
               {!imgError ? (
                 <img
