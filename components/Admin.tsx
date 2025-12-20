@@ -130,8 +130,8 @@ export const Admin: React.FC = () => {
                     </div>
 
                     <div className="p-2">
-                        {stats?.stepData.map((step: any, idx: number) => {
-                            const prevStepCount = idx > 0 ? stats.stepData[idx - 1].count : stats.totalVisits;
+                        {(stats?.stepData || []).map((step: any, idx: number) => {
+                            const prevStepCount = idx > 0 && stats?.stepData?.[idx - 1] ? stats.stepData[idx - 1].count : (stats?.totalVisits || 0);
                             const dropPercentage = prevStepCount > 0 ? Math.round(((prevStepCount - step.count) / prevStepCount) * 100) : 0;
 
                             return (
