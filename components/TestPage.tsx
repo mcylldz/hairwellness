@@ -208,10 +208,10 @@ export const TestPage: React.FC<TestPageProps> = ({ onPaymentSuccess }) => {
                 {/* 4-Week Plan (Most Popular) */}
                 <div
                     onClick={() => setSelectedPlan('4-week')}
-                    className={`relative rounded-2xl border-2 cursor-pointer transition-all duration-200 overflow-hidden ${selectedPlan === '4-week' ? 'border-[#7000FF] bg-white ring-1 ring-[#7000FF]/30' : 'border-gray-200 bg-white'}`}
+                    className={`relative rounded-2xl border-2 cursor-pointer transition-all duration-200 overflow-hidden ${selectedPlan === '4-week' ? 'border-[#2bb3c9] bg-white ring-1 ring-[#2bb3c9]/30' : 'border-gray-200 bg-white'}`}
                 >
                     {/* Purple Banner */}
-                    <div className="bg-[#7000FF] text-white text-center text-xs font-bold uppercase py-1.5 tracking-wide">
+                    <div className="bg-[#2bb3c9] text-white text-center text-xs font-bold uppercase py-1.5 tracking-wide">
                         Most Popular
                     </div>
 
@@ -219,7 +219,7 @@ export const TestPage: React.FC<TestPageProps> = ({ onPaymentSuccess }) => {
                         <div className="flex items-center gap-4">
                             {/* Radio Circle - Custom Check for active */}
                             {selectedPlan === '4-week' ? (
-                                <div className="w-6 h-6 rounded-full bg-[#7000FF] flex items-center justify-center shrink-0">
+                                <div className="w-6 h-6 rounded-full bg-[#2bb3c9] flex items-center justify-center shrink-0">
                                     <Check size={14} color="white" strokeWidth={3} />
                                 </div>
                             ) : (
@@ -271,7 +271,7 @@ export const TestPage: React.FC<TestPageProps> = ({ onPaymentSuccess }) => {
             <div className="bg-[#F0E6FF] p-2 rounded-3xl mb-4">
                 <button
                     onClick={handleCheckout}
-                    className="w-full bg-[#7000FF] text-white font-bold text-xl py-4 rounded-2xl shadow-lg shadow-purple-500/20 hover:bg-[#6000dd] transition-all transform active:scale-[0.98]"
+                    className="w-full bg-[#2bb3c9] text-white font-bold text-xl py-4 rounded-2xl shadow-lg shadow-cyan-500/20 hover:bg-[#24a3b5] transition-all transform active:scale-[0.98]"
                 >
                     GET MY PLAN
                 </button>
@@ -288,7 +288,7 @@ export const TestPage: React.FC<TestPageProps> = ({ onPaymentSuccess }) => {
 
             {/* Scientific Backing - Minimal (Updated Name) */}
             <div className="flex gap-3 mb-8 px-2 justify-center text-left max-w-sm mx-auto">
-                <div className="shrink-0 mt-1 text-[#7000FF]">
+                <div className="shrink-0 mt-1 text-[#2bb3c9]">
                     <Target size={20} />
                 </div>
                 <div>
@@ -324,7 +324,7 @@ export const TestPage: React.FC<TestPageProps> = ({ onPaymentSuccess }) => {
             <div className="sticky top-0 z-50 bg-white border-b border-slate-100 py-3 px-4 shadow-sm flex justify-between items-center transition-all duration-300">
                 <div className="flex flex-col">
                     <span className="text-[10px] font-bold text-slate-900 leading-none mb-1">60% discount reserved for</span>
-                    <div className="font-bold text-[#7000FF] text-2xl leading-none tracking-tight tabular-nums flex items-baseline">
+                    <div className="font-bold text-[#2bb3c9] text-2xl leading-none tracking-tight tabular-nums flex items-baseline">
                         {formatTimeComponents(timeLeft).mins}
                         <span className="animate-pulse mx-0.5 opacity-50 text-xl">:</span>
                         {formatTimeComponents(timeLeft).secs}
@@ -332,7 +332,7 @@ export const TestPage: React.FC<TestPageProps> = ({ onPaymentSuccess }) => {
                 </div>
                 <button
                     onClick={handleCheckout}
-                    className="bg-[#7000FF] text-white text-xs font-bold px-6 py-3 rounded-lg uppercase tracking-wide hover:bg-[#6000dd] transition-colors shadow-lg shadow-purple-500/20"
+                    className="bg-[#2bb3c9] text-white text-xs font-bold px-6 py-3 rounded-lg uppercase tracking-wide hover:bg-[#24a3b5] transition-colors shadow-lg shadow-cyan-500/20"
                 >
                     GET MY PLAN
                 </button>
@@ -345,7 +345,7 @@ export const TestPage: React.FC<TestPageProps> = ({ onPaymentSuccess }) => {
                     <img src="/before-after.jpg" alt="Hair Transformation Before and After" className="w-full object-cover aspect-[4/3]" />
                     <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
                     <div className="absolute bottom-4 left-4 bg-black/60 text-white px-3 py-1 text-[10px] rounded-full uppercase font-bold tracking-wider backdrop-blur-sm border border-white/20">Before</div>
-                    <div className="absolute bottom-4 right-4 bg-[#7000FF]/90 text-white px-3 py-1 text-[10px] rounded-full uppercase font-bold tracking-wider backdrop-blur-sm border border-white/20 shadow-lg shadow-purple-500/30">After</div>
+                    <div className="absolute bottom-4 right-4 bg-[#2bb3c9]/90 text-white px-3 py-1 text-[10px] rounded-full uppercase font-bold tracking-wider backdrop-blur-sm border border-white/20 shadow-lg shadow-cyan-500/30">After</div>
                 </div>
 
                 {/* 3. Grid Analysis */}
@@ -359,8 +359,8 @@ export const TestPage: React.FC<TestPageProps> = ({ onPaymentSuccess }) => {
                             </div>
                             <div className="h-px bg-slate-100 w-full"></div>
                             <div className="flex flex-col gap-1">
-                                <span className="text-[#7000FF] text-[9px] font-bold uppercase tracking-widest">GOAL</span>
-                                <span className="text-[#7000FF] font-black text-sm leading-tight">Optimized Hair health</span>
+                                <span className="text-[#2bb3c9] text-[9px] font-bold uppercase tracking-widest">GOAL</span>
+                                <span className="text-[#2bb3c9] font-black text-sm leading-tight">Optimized Hair health</span>
                             </div>
                         </div>
 
@@ -375,11 +375,11 @@ export const TestPage: React.FC<TestPageProps> = ({ onPaymentSuccess }) => {
                                 </div>
                             </div>
                             <div>
-                                <h3 className="text-[9px] font-bold text-[#7000FF] uppercase tracking-wide mb-1 leading-tight">Optimized Routine</h3>
+                                <h3 className="text-[9px] font-bold text-[#2bb3c9] uppercase tracking-wide mb-1 leading-tight">Optimized Routine</h3>
                                 <div className="flex gap-1">
-                                    <div className="h-2 w-full rounded-full bg-[#7000FF]"></div>
-                                    <div className="h-2 w-full rounded-full bg-[#7000FF]"></div>
-                                    <div className="h-2 w-full rounded-full bg-[#7000FF]"></div>
+                                    <div className="h-2 w-full rounded-full bg-[#2bb3c9]"></div>
+                                    <div className="h-2 w-full rounded-full bg-[#2bb3c9]"></div>
+                                    <div className="h-2 w-full rounded-full bg-[#2bb3c9]"></div>
                                 </div>
                             </div>
                         </div>
@@ -410,13 +410,13 @@ export const TestPage: React.FC<TestPageProps> = ({ onPaymentSuccess }) => {
                         </div>
 
                         {/* Match */}
-                        <div className="bg-gradient-to-b from-purple-50 to-white p-4 rounded-2xl border border-purple-100 flex flex-col items-center text-center shadow-sm relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-12 h-12 bg-[#7000FF]/5 rounded-bl-full -mr-3 -mt-3"></div>
-                            <div className="w-10 h-10 bg-[#7000FF]/10 text-[#7000FF] rounded-full flex items-center justify-center mb-2">
+                        <div className="bg-gradient-to-b from-cyan-50 to-white p-4 rounded-2xl border border-cyan-100 flex flex-col items-center text-center shadow-sm relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-12 h-12 bg-[#2bb3c9]/5 rounded-bl-full -mr-3 -mt-3"></div>
+                            <div className="w-10 h-10 bg-[#2bb3c9]/10 text-[#2bb3c9] rounded-full flex items-center justify-center mb-2">
                                 <ChartBar size={20} strokeWidth={2} />
                             </div>
-                            <span className="text-[9px] font-bold text-[#7000FF]/60 uppercase tracking-widest mb-1">Plan fit for you</span>
-                            <span className="font-bold text-[#7000FF] text-xs leading-tight">Personalized Match: 96%</span>
+                            <span className="text-[9px] font-bold text-[#2bb3c9]/60 uppercase tracking-widest mb-1">Plan fit for you</span>
+                            <span className="font-bold text-[#2bb3c9] text-xs leading-tight">Personalized Match: 96%</span>
                         </div>
                     </div>
                 </div>
@@ -464,7 +464,7 @@ export const TestPage: React.FC<TestPageProps> = ({ onPaymentSuccess }) => {
                                     className="w-full h-full object-cover"
                                 />
                                 {/* Label badge positioned on image */}
-                                <div className="absolute top-4 left-4 bg-[#7000FF] text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide shadow-sm">
+                                <div className="absolute top-4 left-4 bg-[#2bb3c9] text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide shadow-sm">
                                     {testimonials[testimonialIndex]?.timeframe}
                                 </div>
                             </div>
@@ -496,7 +496,7 @@ export const TestPage: React.FC<TestPageProps> = ({ onPaymentSuccess }) => {
                                 <button
                                     key={idx}
                                     onClick={() => setTestimonialIndex(idx)}
-                                    className={`h-1.5 rounded-full transition-all duration-300 ${idx === testimonialIndex ? 'w-6 bg-[#7000FF]' : 'w-1.5 bg-slate-200'}`}
+                                    className={`h-1.5 rounded-full transition-all duration-300 ${idx === testimonialIndex ? 'w-6 bg-[#2bb3c9]' : 'w-1.5 bg-slate-200'}`}
                                 />
                             ))}
                         </div>
@@ -515,7 +515,7 @@ export const TestPage: React.FC<TestPageProps> = ({ onPaymentSuccess }) => {
                                 >
                                     <span className="font-semibold text-sm text-slate-800 pr-4">{faq.question}</span>
                                     {openFaqIndex === index ? (
-                                        <ChevronUp size={18} className="text-[#7000FF] shrink-0" />
+                                        <ChevronUp size={18} className="text-[#2bb3c9] shrink-0" />
                                     ) : (
                                         <ChevronDown size={18} className="text-slate-400 shrink-0" />
                                     )}
@@ -564,13 +564,13 @@ export const TestPage: React.FC<TestPageProps> = ({ onPaymentSuccess }) => {
                                 <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Your hair goal</span>
                                 <span className="font-bold text-slate-800 text-xs leading-tight">Healthy, Strong Hair</span>
                             </div>
-                            <div className="bg-gradient-to-b from-purple-50 to-white p-4 rounded-2xl border border-purple-100 flex flex-col items-center text-center shadow-sm relative overflow-hidden">
-                                <div className="absolute top-0 right-0 w-12 h-12 bg-[#7000FF]/5 rounded-bl-full -mr-3 -mt-3"></div>
-                                <div className="w-10 h-10 bg-[#7000FF]/10 text-[#7000FF] rounded-full flex items-center justify-center mb-2">
+                            <div className="bg-gradient-to-b from-cyan-50 to-white p-4 rounded-2xl border border-cyan-100 flex flex-col items-center text-center shadow-sm relative overflow-hidden">
+                                <div className="absolute top-0 right-0 w-12 h-12 bg-[#2bb3c9]/5 rounded-bl-full -mr-3 -mt-3"></div>
+                                <div className="w-10 h-10 bg-[#2bb3c9]/10 text-[#2bb3c9] rounded-full flex items-center justify-center mb-2">
                                     <ChartBar size={20} strokeWidth={2} />
                                 </div>
-                                <span className="text-[9px] font-bold text-[#7000FF]/60 uppercase tracking-widest mb-1">Plan fit for you</span>
-                                <span className="font-bold text-[#7000FF] text-xs leading-tight">Personalized Match: 96%</span>
+                                <span className="text-[9px] font-bold text-[#2bb3c9]/60 uppercase tracking-widest mb-1">Plan fit for you</span>
+                                <span className="font-bold text-[#2bb3c9] text-xs leading-tight">Personalized Match: 96%</span>
                             </div>
                         </div>
                     </div>

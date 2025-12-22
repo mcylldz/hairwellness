@@ -28,7 +28,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
 
                 {/* Quiz Badge - No bg/border, closer to subtitle */}
                 <div className="pt-2">
-                    <span className="text-sm font-bold text-purple-700 uppercase tracking-wide">
+                    <span className="text-sm font-bold text-cyan-700 uppercase tracking-wide">
                         START 1-MINUTE QUIZ
                     </span>
                 </div>
@@ -45,7 +45,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
                 {/* Continue Button - Reduced radius */}
                 <button
                     onClick={handleStart}
-                    className="w-full bg-[#7000FF] hover:bg-[#6000dd] text-white font-bold text-xl py-5 rounded-2xl transition-all transform active:scale-[0.98] uppercase tracking-wide"
+                    className="w-full bg-[#2bb3c9] hover:bg-[#24a3b5] text-white font-bold text-xl py-5 rounded-2xl transition-all transform active:scale-[0.98] uppercase tracking-wide"
                 >
                     CONTINUE
                 </button>

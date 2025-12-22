@@ -161,7 +161,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, sel
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="your@email.com"
-                            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#7000FF] focus:border-transparent transition-all"
+                            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2bb3c9] focus:border-transparent transition-all"
                             required
                             disabled={loading}
                         />
@@ -177,7 +177,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, sel
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             placeholder="John Doe"
-                            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#7000FF] focus:border-transparent transition-all"
+                            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2bb3c9] focus:border-transparent transition-all"
                             required
                             disabled={loading}
                         />
@@ -191,7 +191,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, sel
                         </label>
                         <div
                             id="card-element"
-                            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus-within:ring-2 focus-within:ring-[#7000FF] focus-within:border-transparent transition-all"
+                            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus-within:ring-2 focus-within:ring-[#2bb3c9] focus-within:border-transparent transition-all"
                         />
                     </div>
 
@@ -212,7 +212,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, sel
                     <button
                         type="submit"
                         disabled={loading || !stripe}
-                        className="w-full bg-[#7000FF] text-white font-bold text-lg py-4 rounded-xl hover:bg-[#6000dd] transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        className="w-full bg-[#2bb3c9] text-white font-bold text-lg py-4 rounded-xl hover:bg-[#24a3b5] transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                         {loading ? (
                             <>
