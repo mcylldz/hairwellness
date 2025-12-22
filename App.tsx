@@ -3,6 +3,7 @@ import { Onboarding } from './components/Onboarding';
 import { Home } from './components/Home';
 import { Admin } from './components/Admin';
 import { TestPage } from './components/TestPage';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 const App: React.FC = () => {
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
@@ -21,7 +22,11 @@ const App: React.FC = () => {
 
   // Test Page Route
   if (path === '/testpage') {
-    return <TestPage />;
+    return (
+      <ErrorBoundary>
+        <TestPage />
+      </ErrorBoundary>
+    );
   }
 
   const handleCompleteOnboarding = () => {
