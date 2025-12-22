@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Target, ChartBar, Shield, Check, Clock, Star, ChevronDown, ChevronUp } from 'lucide-react';
 import { SURVEY_STEPS } from '../constants';
+import { PixelService } from '../services/pixel';
 
 export const TestPage: React.FC = () => {
     const [timeLeft, setTimeLeft] = useState(600); // 10 minutes in seconds
@@ -81,6 +82,41 @@ export const TestPage: React.FC = () => {
 
     const toggleFaq = (index: number) => {
         setOpenFaqIndex(openFaqIndex === index ? null : index);
+    };
+
+    const handleCheckout = () => {
+        // Get plan details for tracking
+        const planPrices = {
+            '1-week': 9.99,
+            '4-week': 19.99,
+            '12-week': 39.99
+        };
+
+        // Track InitiateCheckout event
+        PixelService.track('InitiateCheckout', {
+            currency: 'USD',
+            value: planPrices[selectedPlan],
+            content_name: `${selectedPlan} Hair Wellness Plan`
+        });
+
+        // Get appropriate Stripe Payment Link based on selected plan
+        const stripeLinks = {
+            '1-week': (import.meta as any).env.VITE_STRIPE_1_WEEK_LINK,
+            '4-week': (import.meta as any).env.VITE_STRIPE_4_WEEK_LINK,
+            '12-week': (import.meta as any).env.VITE_STRIPE_12_WEEK_LINK
+        };
+
+        const stripeLink = stripeLinks[selectedPlan];
+
+        console.log(`Stripe Checkout for ${selectedPlan}:`, stripeLink ? 'FOUND' : 'NOT FOUND');
+
+        if (stripeLink) {
+            // Redirect to Stripe checkout
+            window.location.href = stripeLink;
+        } else {
+            console.error(`CRITICAL: Stripe Payment Link missing for ${selectedPlan}`);
+            alert(`Payment link not configured for ${selectedPlan}. Please contact support.`);
+        }
     };
 
     const faqs = [
@@ -222,7 +258,10 @@ export const TestPage: React.FC = () => {
 
             {/* Main CTA */}
             <div className="bg-[#F0E6FF] p-2 rounded-3xl mb-4">
-                <button className="w-full bg-[#7000FF] text-white font-bold text-xl py-4 rounded-2xl shadow-lg shadow-purple-500/20 hover:bg-[#6000dd] transition-all transform active:scale-[0.98]">
+                <button
+                    onClick={handleCheckout}
+                    className="w-full bg-[#7000FF] text-white font-bold text-xl py-4 rounded-2xl shadow-lg shadow-purple-500/20 hover:bg-[#6000dd] transition-all transform active:scale-[0.98]"
+                >
                     GET MY PLAN
                 </button>
             </div>
@@ -281,7 +320,7 @@ export const TestPage: React.FC = () => {
                     </div>
                 </div>
                 <button
-                    onClick={() => document.getElementById('plans-section')?.scrollIntoView({ behavior: 'smooth' })}
+                    onClick={handleCheckout}
                     className="bg-[#7000FF] text-white text-xs font-bold px-6 py-3 rounded-lg uppercase tracking-wide hover:bg-[#6000dd] transition-colors shadow-lg shadow-purple-500/20"
                 >
                     GET MY PLAN
