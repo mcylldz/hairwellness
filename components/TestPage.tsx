@@ -1,24 +1,68 @@
-import React, { useState, useEffect } from 'react';
-import { Target, ChartBar, Shield, Check, Clock, Lock, Star, ChevronDown, ChevronUp } from 'lucide-react';
-import { SURVEY_STEPS } from '../constants'; // Import constants to get testimonial data
+import React, { useState, useEffect, useRef } from 'react';
+import { Target, ChartBar, Shield, Check, Clock, Star, ChevronDown, ChevronUp } from 'lucide-react';
+import { SURVEY_STEPS } from '../constants';
 
 export const TestPage: React.FC = () => {
     const [timeLeft, setTimeLeft] = useState(600); // 10 minutes in seconds
     const [selectedPlan, setSelectedPlan] = useState<'1-week' | '4-week' | '12-week'>('4-week');
-    const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0); // Default first one open
+    const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
     const [testimonialIndex, setTestimonialIndex] = useState(0);
+    const [userName, setUserName] = useState('Friend');
 
-    // Get testimonials from constants
-    // The testimonial step has id 'results_preview' and is type 'testimonials'
+    // Carousel state
+    const touchStart = useRef<number | null>(null);
+    const touchEnd = useRef<number | null>(null);
+
+    // Get testimonials
     const testimonialStep = SURVEY_STEPS.find(step => step.id === 'results_preview');
     const testimonials = testimonialStep?.testimonials || [];
 
+    // 1. Dynamic Name & Timer
     useEffect(() => {
+        // Try to get name from URL params
+        const params = new URLSearchParams(window.location.search);
+        const nameParam = params.get('name');
+        if (nameParam) {
+            setUserName(nameParam);
+        }
+
         const timer = setInterval(() => {
             setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
         }, 1000);
         return () => clearInterval(timer);
     }, []);
+
+    // 2. Carousel Auto-play & Swipe
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTestimonialIndex((prev) => (prev + 1) % testimonials.length);
+        }, 4000);
+        return () => clearInterval(interval);
+    }, [testimonials.length]);
+
+    const handleTouchStart = (e: React.TouchEvent) => {
+        touchStart.current = e.targetTouches[0].clientX;
+    };
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+        touchEnd.current = e.targetTouches[0].clientX;
+    };
+
+    const handleTouchEnd = () => {
+        if (!touchStart.current || !touchEnd.current) return;
+        const distance = touchStart.current - touchEnd.current;
+        const isLeftSwipe = distance > 50;
+        const isRightSwipe = distance < -50;
+
+        if (isLeftSwipe) {
+            setTestimonialIndex((prev) => (prev + 1) % testimonials.length);
+        }
+        if (isRightSwipe) {
+            setTestimonialIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+        }
+        touchEnd.current = null;
+    };
+
 
     const formatTimeVerbose = (seconds: number) => {
         const mins = Math.floor(seconds / 60);
@@ -63,9 +107,9 @@ export const TestPage: React.FC = () => {
     ];
 
     const PlansSection = () => (
-        <div id="plans-selection-inner" className="bg-slate-50 rounded-xl p-4 md:p-6 mb-8">
-            {/* Promo Banner */}
-            <div className="bg-[#EAFBF3] rounded-2xl p-4 mb-6 shadow-sm">
+        <div id="plans-selection-inner" className="bg-slate-50 rounded-xl p-2 md:p-6 mb-8 w-[106%] -ml-[3%]">
+            {/* Promo Banner - Widened */}
+            <div className="bg-[#EAFBF3] rounded-2xl p-4 mb-6">
                 <div className="flex items-center gap-2 mb-3">
                     <div className="bg-[#59CFA2] p-1 rounded-full"><div className="w-2 h-2 bg-white rounded-full"></div></div>
                     <h3 className="font-bold text-[#0D2B1D] text-sm md:text-base">Your promo code applied!</h3>
@@ -73,7 +117,7 @@ export const TestPage: React.FC = () => {
 
                 <div className="flex gap-3">
                     {/* Code Box */}
-                    <div className="flex-1 bg-white rounded-xl border border-slate-100 flex items-center p-3 shadow-sm overflow-hidden">
+                    <div className="flex-1 bg-white rounded-xl flex items-center p-3 overflow-hidden">
                         <div className="text-[#2ECC71] mr-2 shrink-0"><Check size={16} strokeWidth={3} /></div>
                         <span className="font-semibold text-slate-800 text-xs md:text-sm truncate">MEHMET_Dec25</span>
                     </div>
@@ -85,13 +129,13 @@ export const TestPage: React.FC = () => {
                 </div>
             </div>
 
-            {/* Subscription Plans */}
+            {/* Subscription Plans - Widened and Styles Removed */}
             <div className="space-y-4 mb-8">
 
                 {/* 1-Week Plan */}
                 <div
                     onClick={() => setSelectedPlan('1-week')}
-                    className={`relative p-0 rounded-2xl border-2 cursor-pointer transition-all duration-200 bg-white overflow-hidden ${selectedPlan === '1-week' ? 'border-slate-400' : 'border-slate-100'}`}
+                    className={`relative p-0 rounded-2xl border-2 cursor-pointer transition-all duration-200 bg-white overflow-hidden ${selectedPlan === '1-week' ? 'border-slate-400' : 'border-gray-100'}`}
                 >
                     <div className="p-4 flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -117,7 +161,7 @@ export const TestPage: React.FC = () => {
                 {/* 4-Week Plan (Most Popular) */}
                 <div
                     onClick={() => setSelectedPlan('4-week')}
-                    className={`relative rounded-2xl border-2 cursor-pointer transition-all duration-200 overflow-hidden shadow-lg ${selectedPlan === '4-week' ? 'border-[#7000FF] bg-white ring-1 ring-[#7000FF]/30' : 'border-gray-200 bg-white'}`}
+                    className={`relative rounded-2xl border-2 cursor-pointer transition-all duration-200 overflow-hidden ${selectedPlan === '4-week' ? 'border-[#7000FF] bg-white ring-1 ring-[#7000FF]/30' : 'border-gray-200 bg-white'}`}
                 >
                     {/* Purple Banner */}
                     <div className="bg-[#7000FF] text-white text-center text-xs font-bold uppercase py-1.5 tracking-wide">
@@ -152,7 +196,7 @@ export const TestPage: React.FC = () => {
                 {/* 12-Week Plan */}
                 <div
                     onClick={() => setSelectedPlan('12-week')}
-                    className={`relative p-0 rounded-2xl border-2 cursor-pointer transition-all duration-200 bg-white overflow-hidden ${selectedPlan === '12-week' ? 'border-slate-400' : 'border-slate-100'}`}
+                    className={`relative p-0 rounded-2xl border-2 cursor-pointer transition-all duration-200 bg-white overflow-hidden ${selectedPlan === '12-week' ? 'border-slate-400' : 'border-gray-100'}`}
                 >
                     <div className="p-4 flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -246,7 +290,7 @@ export const TestPage: React.FC = () => {
 
             <div className="max-w-md mx-auto bg-white min-h-screen shadow-xl">
 
-                {/* 2. Hero Section (Before/After) */}
+                {/* 2. Hero Section (Before/After) - NO BORDERS/SHADOWS */}
                 <div className="relative group">
                     <img src="/before-after.jpg" alt="Hair Transformation Before and After" className="w-full object-cover aspect-[4/3]" />
                     <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
@@ -292,14 +336,14 @@ export const TestPage: React.FC = () => {
                     </div>
                 </div>
 
-                {/* 4. Highlights of your plan (Vertical) */}
+                {/* 4. Highlights of your plan (Vertical) - NO BORDERS/SHADOWS */}
                 <div className="p-6 pb-8 border-b-8 border-slate-50">
                     <h2 className="text-xl font-bold text-slate-900 mb-6 text-center">Highlights of your plan</h2>
                     <div className="grid gap-4">
-                        <img src="/hp1.png" alt="Highlight 1" className="w-full rounded-2xl shadow-sm border border-slate-100" />
-                        <img src="/hp2.jpg" alt="Highlight 2" className="w-full rounded-2xl shadow-sm border border-slate-100" />
-                        <img src="/hp3.png" alt="Highlight 3" className="w-full rounded-2xl shadow-sm border border-slate-100" />
-                        <img src="/hp4.png" alt="Highlight 4" className="w-full rounded-2xl shadow-sm border border-slate-100" />
+                        <img src="/hp1.png" alt="Highlight 1" className="w-full" />
+                        <img src="/hp2.jpg" alt="Highlight 2" className="w-full" />
+                        <img src="/hp3.png" alt="Highlight 3" className="w-full" />
+                        <img src="/hp4.png" alt="Highlight 4" className="w-full" />
                     </div>
                 </div>
 
@@ -328,57 +372,68 @@ export const TestPage: React.FC = () => {
                 </div>
 
                 {/* 6. Promo Code & Plans Section (First Instance) */}
-                <div id="plans-section" className="px-6 pb-6 pt-2 bg-slate-50">
+                <div id="plans-section" className="px-6 pb-6 pt-2 bg-slate-50 overflow-hidden">
                     <PlansSection />
                     <TrustAndGuarantee />
                 </div>
 
                 {/* === NEW SECTIONS === */}
 
-                {/* 7. Discover your best haircare matches */}
+                {/* 7. Discover your best haircare matches - NO BORDERS/SHADOWS */}
                 <div className="p-6 border-b-8 border-slate-50 bg-white">
                     <h2 className="text-xl font-bold text-slate-900 mb-6 text-center leading-tight">Discover your best<br />haircare matches</h2>
-                    <img src="/DM.png" alt="Product Matches" className="w-full rounded-xl shadow-sm" />
+                    <img src="/DM.png" alt="Product Matches" className="w-full" />
                 </div>
 
-                {/* 8. Other products that fit your hair (OP Placeholder) */}
+                {/* 8. Other products that fit your hair (OP.png) - NO BORDERS/SHADOWS */}
                 <div className="p-6 border-b-8 border-slate-50 bg-white">
                     <div className="text-center mb-6">
                         <h2 className="text-xl font-bold text-slate-900 mb-2">Other products that fit your hair</h2>
                         <p className="text-slate-500 text-sm">Check out products that match your hair type best with the product scanner</p>
                     </div>
-                    {/* OP.png Visual */}
-                    <img src="/OP.png" alt="Product Scanner Results" className="w-full rounded-xl shadow-sm border border-slate-100" />
+                    <img src="/OP.png" alt="Product Scanner Results" className="w-full" />
                 </div>
 
-                {/* 9. Results that makes us proud (Testimonials Carousel) */}
+                {/* 9. Results that makes us proud (Testimonials Carousel) - FIXED */}
                 <div className="p-6 border-b-8 border-slate-50 bg-white">
                     <h2 className="text-xl font-bold text-slate-900 mb-6 text-center">Results that makes us proud</h2>
 
-                    {/* Reused Carousel Logic */}
-                    <div className="w-full flex flex-col space-y-4">
-                        <div className="w-full h-56 md:h-64 rounded-2xl overflow-hidden shadow-md bg-slate-100 shrink-0 relative">
-                            {/* Display current testimonial image */}
-                            <img
-                                src={testimonials[testimonialIndex]?.beforeImage}
-                                alt={testimonials[testimonialIndex]?.name}
-                                className="w-full h-full object-cover"
-                            />
-                            {/* Overlay Info */}
-                            <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm p-4 border-t border-slate-100">
-                                <div className="flex items-center justify-between mb-2">
-                                    <div className="text-base font-bold text-slate-900">
+                    <div
+                        className="w-full flex flex-col space-y-4"
+                        onTouchStart={handleTouchStart}
+                        onTouchMove={handleTouchMove}
+                        onTouchEnd={handleTouchEnd}
+                    >
+                        {/* Card with layout fix */}
+                        <div className="w-full rounded-2xl overflow-hidden shadow-none border border-slate-100 bg-white">
+                            {/* Image portion - Full width */}
+                            <div className="w-full aspect-video bg-slate-100 relative">
+                                <img
+                                    src={testimonials[testimonialIndex]?.beforeImage}
+                                    alt={testimonials[testimonialIndex]?.name}
+                                    className="w-full h-full object-cover"
+                                />
+                                {/* Label badge positioned on image */}
+                                <div className="absolute top-4 left-4 bg-[#7000FF] text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide shadow-sm">
+                                    {testimonials[testimonialIndex]?.timeframe}
+                                </div>
+                            </div>
+
+                            {/* Content portion - Below image, no overlap */}
+                            <div className="p-5">
+                                <div className="flex items-center justify-between mb-3">
+                                    <div className="text-lg font-bold text-slate-900">
                                         {testimonials[testimonialIndex]?.name}, {testimonials[testimonialIndex]?.age}
                                     </div>
-                                    <div className="bg-[#7000FF] text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">
-                                        {testimonials[testimonialIndex]?.timeframe}
+                                    <div className="flex gap-0.5">
+                                        {[1, 2, 3, 4, 5].map(i => <Star key={i} size={14} fill="#FFB800" stroke="none" />)}
                                     </div>
                                 </div>
-                                <div className="flex items-start gap-2">
-                                    <div className="mt-0.5 shrink-0 w-4 h-4 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                                <div className="flex items-start gap-2.5">
+                                    <div className="mt-1 shrink-0 w-4 h-4 rounded-full bg-green-100 flex items-center justify-center text-green-600">
                                         <Check size={10} strokeWidth={3} />
                                     </div>
-                                    <p className="text-xs text-slate-600 leading-relaxed font-medium">
+                                    <p className="text-sm text-slate-700 leading-relaxed font-medium">
                                         "{testimonials[testimonialIndex]?.result}"
                                     </p>
                                 </div>
@@ -427,23 +482,25 @@ export const TestPage: React.FC = () => {
                     </div>
                 </div>
 
-                {/* 11. Users love our plans */}
+                {/* 11. Users love our plans - REORDERED (RW1-3 then C1) & NAKED */}
                 <div className="p-6 border-b-8 border-slate-50 bg-white">
                     <h2 className="text-xl font-bold text-slate-900 mb-6 text-center">Users love our plans</h2>
-                    <div className="space-y-6">
-                        <img src="/C1.png" alt="Beauty Plan Award" className="w-full" />
+                    <div className="space-y-4">
+                        {/* Reviews first */}
                         <div className="flex flex-col gap-4">
-                            <img src="/RW1.png" alt="Review 1" className="w-full rounded-xl shadow-sm border border-slate-100" />
-                            <img src="/RW2.png" alt="Review 2" className="w-full rounded-xl shadow-sm border border-slate-100" />
-                            <img src="/RW3.png" alt="Review 3" className="w-full rounded-xl shadow-sm border border-slate-100" />
+                            <img src="/RW1.png" alt="Review 1" className="w-full" />
+                            <img src="/RW2.png" alt="Review 2" className="w-full" />
+                            <img src="/RW3.png" alt="Review 3" className="w-full" />
                         </div>
+                        {/* C1 last */}
+                        <img src="/C1.png" alt="Beauty Plan Award" className="w-full mt-2" />
                     </div>
                 </div>
 
-                {/* 12. Final CTA Section */}
-                <div className="pt-8 pb-10 bg-slate-50">
+                {/* 12. Final CTA Section - Dynamic Name */}
+                <div className="pt-8 pb-10 bg-slate-50 overflow-hidden">
                     <h2 className="text-2xl font-bold text-center text-slate-900 mb-6 px-6">
-                        (Name),<br />your personal plan is ready!
+                        {userName},<br />your personal plan is ready!
                     </h2>
 
                     {/* Re-render Goal & Match */}
