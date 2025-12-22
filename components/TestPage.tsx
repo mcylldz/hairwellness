@@ -347,10 +347,8 @@ export const TestPage: React.FC = () => {
                         <h2 className="text-xl font-bold text-slate-900 mb-2">Other products that fit your hair</h2>
                         <p className="text-slate-500 text-sm">Check out products that match your hair type best with the product scanner</p>
                     </div>
-                    {/* Placeholder for OP.png as requested */}
-                    <div className="w-full aspect-[4/3] bg-slate-100 rounded-xl flex items-center justify-center border-2 border-dashed border-slate-300 text-slate-400">
-                        <span className="text-xs font-medium">Product Scanner Visual (OP.png)</span>
-                    </div>
+                    {/* OP.png Visual */}
+                    <img src="/OP.png" alt="Product Scanner Results" className="w-full rounded-xl shadow-sm border border-slate-100" />
                 </div>
 
                 {/* 9. Results that makes us proud (Testimonials Carousel) */}
