@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Onboarding } from './components/Onboarding';
 import { Home } from './components/Home';
 import { Admin } from './components/Admin';
+import { TestPage } from './components/TestPage';
 
 const App: React.FC = () => {
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
@@ -16,6 +17,11 @@ const App: React.FC = () => {
   // Admin Route
   if (path === '/admin') {
     return <Admin />;
+  }
+
+  // Test Page Route
+  if (path === '/testpage') {
+    return <TestPage />;
   }
 
   const handleCompleteOnboarding = () => {
