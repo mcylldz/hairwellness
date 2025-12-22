@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, ArrowRight, Check, Camera, Trash2 } from 'lucide-react';
 import { SURVEY_STEPS } from '../constants';
 import { AnalysisLoader } from './AnalysisLoader';
-import { ReportView } from './ReportView';
 import { AnalysisResult } from '../types';
 import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
-import { Paywall } from './Paywall';
+import { TestPage } from './TestPage';
+import { ThankYouPage } from './ThankYouPage';
 import { PrivacyPolicy } from './PrivacyPolicy';
 import { TermsOfService } from './TermsOfService';
 import { SubscriptionPolicy } from './SubscriptionPolicy';
@@ -30,8 +30,7 @@ export const Home = () => {
   const [debugMode, setDebugMode] = useState(false);
   const [debugClicks, setDebugClicks] = useState(0);
   const [isApiFinished, setIsApiFinished] = useState(false);
-  const [showReport, setShowReport] = useState(false);
-  const [showPaywall, setShowPaywall] = useState(false);
+  const [showTestPage, setShowTestPage] = useState(false);
   const [showThankYou, setShowThankYou] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
@@ -149,7 +148,6 @@ export const Home = () => {
   const startAnalysis = async () => {
     setIsAnalyzing(true);
     setIsApiFinished(false);
-    setShowPaywall(false);
 
     console.log("Starting analysis pivot: Sending all data to n8n...");
 
@@ -196,7 +194,7 @@ export const Home = () => {
   };
 
   const handleAnimationComplete = () => {
-    setShowReport(true);
+    setShowTestPage(true);
   };
 
   const handleBack = () => {
@@ -713,44 +711,17 @@ export const Home = () => {
     return <SubscriptionPolicy onClose={() => setShowSubscription(false)} />;
   }
 
-  if (showPaywall) {
+  if (showThankYou) {
+    return <ThankYouPage selectedPlan="4-week" email={getAnswer('email')} />;
+  }
+
+  if (showTestPage) {
     return (
-      <Paywall
-        onSuccess={() => {
-          setShowPaywall(false);
+      <TestPage
+        onPaymentSuccess={() => {
+          setShowTestPage(false);
           setShowThankYou(true);
         }}
-        onClose={() => setShowPaywall(false)}
-        onPrivacy={() => setShowPrivacy(true)}
-        onTerms={() => setShowTerms(true)}
-        onSubscription={() => setShowSubscription(true)}
-      />
-    );
-  }
-
-  if (showThankYou) {
-    return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 text-center space-y-6">
-        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-4">
-          <Check className="w-10 h-10 text-green-600" />
-        </div>
-        <h1 className="text-3xl font-bold text-slate-900">Thank You!</h1>
-        <p className="text-lg text-slate-600 leading-relaxed max-w-sm">
-          Your payment was successful. All your answers and your personalized 12-week plan have been sent to <span className="font-bold text-cyan-600">{getAnswer('email')}</span>.
-        </p>
-        <div className="w-full h-1 bg-slate-100 rounded-full max-w-[200px]" />
-        <p className="text-sm text-slate-400">
-          You can close this window now.
-        </p>
-      </div>
-    );
-  }
-
-  if (showReport) {
-    return (
-      <ReportView
-        data={analysisData}
-        onUnlock={() => setShowPaywall(true)}
       />
     );
   }

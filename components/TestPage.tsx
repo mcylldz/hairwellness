@@ -4,7 +4,11 @@ import { SURVEY_STEPS } from '../constants';
 import { PixelService } from '../services/pixel';
 import { PaymentModal } from './PaymentModal';
 
-export const TestPage: React.FC = () => {
+interface TestPageProps {
+    onPaymentSuccess?: () => void;
+}
+
+export const TestPage: React.FC<TestPageProps> = ({ onPaymentSuccess }) => {
     const [timeLeft, setTimeLeft] = useState(600); // 10 minutes in seconds
     const [selectedPlan, setSelectedPlan] = useState<'1-week' | '4-week' | '12-week'>('4-week');
     const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
@@ -120,9 +124,10 @@ export const TestPage: React.FC = () => {
             content_name: `${selectedPlan} Hair Wellness Plan`
         });
 
-        // Show success and redirect
-        alert('Payment successful! Welcome to your Hair Wellness Plan!');
-        // You can redirect to thank you page: window.location.href = '/thank-you';
+        // Call parent callback to show thank you page
+        if (onPaymentSuccess) {
+            onPaymentSuccess();
+        }
     };
 
     const faqs = [
