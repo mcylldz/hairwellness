@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Target, ChartBar, Shield, Check, Clock, Lock } from 'lucide-react';
+import { Target, ChartBar, Shield, Check, Clock, Lock, Star } from 'lucide-react';
 
 export const TestPage: React.FC = () => {
     const [timeLeft, setTimeLeft] = useState(600); // 10 minutes in seconds
