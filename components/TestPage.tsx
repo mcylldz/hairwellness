@@ -382,7 +382,7 @@ export const TestPage: React.FC = () => {
                 {/* 7. Discover your best haircare matches - NO BORDERS/SHADOWS */}
                 <div className="p-6 border-b-8 border-slate-50 bg-white">
                     <h2 className="text-xl font-bold text-slate-900 mb-6 text-center leading-tight">Discover your best<br />haircare matches</h2>
-                    <img src="/DM.png" alt="Product Matches" className="w-full" />
+                    <img src="/RW3.png" alt="Product Matches" className="w-full" />
                 </div>
 
                 {/* 8. Other products that fit your hair (OP.png) - NO BORDERS/SHADOWS */}
@@ -482,7 +482,7 @@ export const TestPage: React.FC = () => {
                     </div>
                 </div>
 
-                {/* 11. Users love our plans - REORDERED (RW1-3 then C1) & NAKED */}
+                {/* 11. Users love our plans - REORDERED (Reviews, C1, DM) & NAKED */}
                 <div className="p-6 border-b-8 border-slate-50 bg-white">
                     <h2 className="text-xl font-bold text-slate-900 mb-6 text-center">Users love our plans</h2>
                     <div className="space-y-4">
@@ -490,10 +490,11 @@ export const TestPage: React.FC = () => {
                         <div className="flex flex-col gap-4">
                             <img src="/RW1.png" alt="Review 1" className="w-full" />
                             <img src="/RW2.png" alt="Review 2" className="w-full" />
-                            <img src="/RW3.png" alt="Review 3" className="w-full" />
                         </div>
-                        {/* C1 last */}
+                        {/* C1 Middle */}
                         <img src="/C1.png" alt="Beauty Plan Award" className="w-full mt-2" />
+                        {/* DM Last */}
+                        <img src="/DM.png" alt="Discover Matches" className="w-full mt-2" />
                     </div>
                 </div>
 
