@@ -14,7 +14,16 @@ export const TestPage: React.FC = () => {
     const formatTime = (seconds: number) => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
-        return `${mins} : ${secs < 10 ? '0' : ''}${secs}`;
+        return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    };
+
+    const formatTimeComponents = (seconds: number) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return {
+            mins: `${mins < 10 ? '0' : ''}${mins}`,
+            secs: `${secs < 10 ? '0' : ''}${secs}`
+        };
     };
 
     const formatTimeVerbose = (seconds: number) => {
@@ -27,16 +36,21 @@ export const TestPage: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-20">
-            {/* 1. Sticky Header */}
-            <div className="sticky top-0 z-50 bg-[#7000FF] text-white py-3 px-4 shadow-md flex justify-between items-center transition-all duration-300">
-                <div className="text-xs md:text-sm font-medium">
-                    <span className="font-bold">60% discount</span> reserved for <span className="font-mono bg-white/20 px-1.5 py-0.5 rounded ml-1 tabular-nums">{formatTimeVerbose(timeLeft)}</span>
+            {/* 1. Sticky Header (Redesigned) */}
+            <div className="sticky top-0 z-50 bg-white border-b border-slate-100 py-3 px-4 shadow-sm flex justify-between items-center transition-all duration-300">
+                <div className="flex flex-col">
+                    <span className="text-[10px] font-bold text-slate-900 leading-none mb-1">60% discount reserved for</span>
+                    <div className="font-bold text-[#7000FF] text-2xl leading-none tracking-tight tabular-nums flex items-baseline">
+                        {formatTimeComponents(timeLeft).mins}
+                        <span className="animate-pulse mx-0.5 opacity-50 text-xl">:</span>
+                        {formatTimeComponents(timeLeft).secs}
+                    </div>
                 </div>
                 <button
                     onClick={() => document.getElementById('plans-section')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="bg-white text-[#7000FF] text-[10px] md:text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wide hover:bg-slate-100 transition-colors shadow-sm"
+                    className="bg-[#7000FF] text-white text-xs font-bold px-6 py-3 rounded-lg uppercase tracking-wide hover:bg-[#6000dd] transition-colors shadow-lg shadow-purple-500/20"
                 >
-                    Get my plan
+                    GET MY PLAN
                 </button>
             </div>
 
@@ -50,52 +64,52 @@ export const TestPage: React.FC = () => {
                     <div className="absolute bottom-4 right-4 bg-[#7000FF]/90 text-white px-3 py-1 text-[10px] rounded-full uppercase font-bold tracking-wider backdrop-blur-sm border border-white/20 shadow-lg shadow-purple-500/30">After</div>
                 </div>
 
-                {/* 3. Grid Analysis (Minimized) */}
-                <div className="p-4 border-b-8 border-slate-50">
-                    <div className="grid grid-cols-2 gap-4">
+                {/* 3. Grid Analysis (Adjusted Width) */}
+                <div className="p-5 border-b-8 border-slate-50">
+                    <div className="grid grid-cols-2 gap-6">
                         {/* Now -> Goal */}
-                        <div className="flex flex-col gap-2">
-                            <div className="flex items-center gap-2">
-                                <span className="text-gray-400 text-[9px] font-bold uppercase tracking-widest w-8">NOW</span>
-                                <span className="text-slate-800 font-bold text-xs leading-tight">Hair health problems</span>
+                        <div className="flex flex-col gap-3 justify-center">
+                            <div className="flex flex-col gap-1">
+                                <span className="text-gray-400 text-[9px] font-bold uppercase tracking-widest">NOW</span>
+                                <span className="text-slate-800 font-bold text-sm leading-tight">Hair health problems</span>
                             </div>
                             <div className="h-px bg-slate-100 w-full"></div>
-                            <div className="flex items-center gap-2">
-                                <span className="text-[#7000FF] text-[9px] font-bold uppercase tracking-widest w-8">GOAL</span>
-                                <span className="text-[#7000FF] font-black text-xs leading-tight">Optimized Hair health</span>
+                            <div className="flex flex-col gap-1">
+                                <span className="text-[#7000FF] text-[9px] font-bold uppercase tracking-widest">GOAL</span>
+                                <span className="text-[#7000FF] font-black text-sm leading-tight">Optimized Hair health</span>
                             </div>
                         </div>
 
                         {/* Effectiveness Bars */}
-                        <div className="flex flex-col justify-center gap-3 pl-2 border-l border-slate-100">
+                        <div className="flex flex-col justify-center gap-4 pl-4 border-l border-slate-100">
                             <div>
                                 <h3 className="text-[9px] font-bold text-slate-400 uppercase tracking-wide mb-1 leading-tight">Current Routine</h3>
                                 <div className="flex gap-1">
-                                    <div className="h-1.5 w-full rounded-full bg-red-400"></div>
-                                    <div className="h-1.5 w-full rounded-full bg-slate-100"></div>
-                                    <div className="h-1.5 w-full rounded-full bg-slate-100"></div>
+                                    <div className="h-2 w-full rounded-full bg-red-400"></div>
+                                    <div className="h-2 w-full rounded-full bg-slate-100"></div>
+                                    <div className="h-2 w-full rounded-full bg-slate-100"></div>
                                 </div>
                             </div>
                             <div>
                                 <h3 className="text-[9px] font-bold text-[#7000FF] uppercase tracking-wide mb-1 leading-tight">Optimized Routine</h3>
                                 <div className="flex gap-1">
-                                    <div className="h-1.5 w-full rounded-full bg-[#7000FF]"></div>
-                                    <div className="h-1.5 w-full rounded-full bg-[#7000FF]"></div>
-                                    <div className="h-1.5 w-full rounded-full bg-[#7000FF]"></div>
+                                    <div className="h-2 w-full rounded-full bg-[#7000FF]"></div>
+                                    <div className="h-2 w-full rounded-full bg-[#7000FF]"></div>
+                                    <div className="h-2 w-full rounded-full bg-[#7000FF]"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* 4. Highlights of your plan */}
+                {/* 4. Highlights of your plan (Reverted to Vertical) */}
                 <div className="p-6 pb-8 border-b-8 border-slate-50">
-                    <h2 className="text-lg font-bold text-slate-900 mb-4 text-center">Highlights of your plan</h2>
-                    <div className="grid grid-cols-2 gap-3">
-                        <img src="/hp1.png" alt="Highlight 1" className="w-full rounded-xl shadow-sm border border-slate-100" />
-                        <img src="/hp2.jpg" alt="Highlight 2" className="w-full rounded-xl shadow-sm border border-slate-100" />
-                        <img src="/hp3.png" alt="Highlight 3" className="w-full rounded-xl shadow-sm border border-slate-100" />
-                        <img src="/hp4.png" alt="Highlight 4" className="w-full rounded-xl shadow-sm border border-slate-100" />
+                    <h2 className="text-xl font-bold text-slate-900 mb-6 text-center">Highlights of your plan</h2>
+                    <div className="grid gap-4">
+                        <img src="/hp1.png" alt="Highlight 1" className="w-full rounded-2xl shadow-sm border border-slate-100" />
+                        <img src="/hp2.jpg" alt="Highlight 2" className="w-full rounded-2xl shadow-sm border border-slate-100" />
+                        <img src="/hp3.png" alt="Highlight 3" className="w-full rounded-2xl shadow-sm border border-slate-100" />
+                        <img src="/hp4.png" alt="Highlight 4" className="w-full rounded-2xl shadow-sm border border-slate-100" />
                     </div>
                 </div>
 
@@ -124,9 +138,9 @@ export const TestPage: React.FC = () => {
                 </div>
 
                 {/* 6. Promo Code & Plans Section */}
-                <div id="plans-section" className="p-6 bg-slate-50">
+                <div id="plans-section" className="px-6 pb-6 pt-2 bg-slate-50">
 
-                    {/* Promo Banner (New Design) */}
+                    {/* Promo Banner (New Design) - Spacing Adjusted */}
                     <div className="bg-[#EAFBF3] rounded-2xl p-4 mb-6 shadow-sm">
                         <div className="flex items-center gap-2 mb-3">
                             <div className="bg-[#59CFA2] p-1 rounded-full"><div className="w-2 h-2 bg-white rounded-full"></div></div>
@@ -141,13 +155,13 @@ export const TestPage: React.FC = () => {
                             </div>
                             {/* Timer Box */}
                             <div className="bg-[#D4F5E4] rounded-xl flex flex-col items-center justify-center px-4 py-1 w-28 text-[#1E5F43]">
-                                <div className="text-xl font-bold leading-none tracking-tight">{formatTime(timeLeft)}</div>
+                                <div className="text-xl font-bold leading-none tracking-tight">{formatTimeVerbose(timeLeft)}</div>
                                 <div className="text-[9px] font-medium opacity-80 leading-none mt-0.5">minutes seconds</div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Subscription Plans */}
+                    {/* Subscription Plans (Dollars) */}
                     <div className="space-y-4 mb-8">
 
                         {/* 1-Week Plan */}
@@ -164,12 +178,12 @@ export const TestPage: React.FC = () => {
                                     <div>
                                         <h3 className="font-bold text-slate-800 text-lg">1-Week Plan</h3>
                                         <div className="text-xs text-slate-400 font-medium">
-                                            <span className="line-through decoration-slate-400 decoration-1">€59.99</span> <span className="text-slate-600">→ €10.49</span>
+                                            <span className="line-through decoration-slate-400 decoration-1">$59.99</span> <span className="text-slate-600">→ $10.49</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <div className="font-bold text-slate-700 text-xl">€1.49</div>
+                                    <div className="font-bold text-slate-700 text-xl">$1.49</div>
                                     <div className="text-[10px] text-slate-400 uppercase font-medium">per day</div>
                                 </div>
                             </div>
@@ -200,12 +214,12 @@ export const TestPage: React.FC = () => {
                                     <div>
                                         <h3 className="font-bold text-slate-900 text-xl">4-Week Plan</h3>
                                         <div className="text-xs text-slate-500 font-medium">
-                                            <span className="line-through decoration-slate-400">€59.99</span> <span className="text-slate-900 font-bold">→ €19.99</span>
+                                            <span className="line-through decoration-slate-400">$59.99</span> <span className="text-slate-900 font-bold">→ $19.99</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <div className="font-black text-slate-900 text-2xl">€0.71</div>
+                                    <div className="font-black text-slate-900 text-2xl">$0.71</div>
                                     <div className="text-[10px] text-slate-500 uppercase font-medium tracking-wide">per day</div>
                                 </div>
                             </div>
@@ -225,12 +239,12 @@ export const TestPage: React.FC = () => {
                                     <div>
                                         <h3 className="font-bold text-slate-800 text-lg">12-Week Plan</h3>
                                         <div className="text-xs text-slate-400 font-medium">
-                                            <span className="line-through decoration-slate-400 decoration-1">€105.99</span> <span className="text-slate-600">→ €34.99</span>
+                                            <span className="line-through decoration-slate-400 decoration-1">$105.99</span> <span className="text-slate-600">→ $34.99</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <div className="font-bold text-slate-700 text-xl">€0.42</div>
+                                    <div className="font-bold text-slate-700 text-xl">$0.42</div>
                                     <div className="text-[10px] text-slate-400 uppercase font-medium">per day</div>
                                 </div>
                             </div>
@@ -243,7 +257,7 @@ export const TestPage: React.FC = () => {
                         <span className="text-sm font-medium text-slate-600 underline decoration-slate-300 underline-offset-2">30-day money-back guarantee</span>
                     </div>
 
-                    {/* Scientific Backing - Minimal */}
+                    {/* Scientific Backing - Minimal (Updated Name) */}
                     <div className="flex gap-3 mb-8 px-2">
                         <div className="shrink-0 mt-1 text-[#7000FF]">
                             <Target size={20} />
@@ -253,7 +267,7 @@ export const TestPage: React.FC = () => {
                                 People using plan for 12 weeks achieve twice as many results as for 4 weeks
                             </p>
                             <p className="text-[10px] text-slate-400">
-                                *According to a research by MaxBeauty, 2025
+                                *According to a research by Mesu, 2025
                             </p>
                         </div>
                     </div>
@@ -265,19 +279,19 @@ export const TestPage: React.FC = () => {
                         </button>
                     </div>
 
-                    {/* Fine Print */}
+                    {/* Fine Print (Dollars, Mesu, Updated Link) */}
                     <div className="text-[10px] text-slate-400 text-justify leading-relaxed mb-8 px-1">
-                        By clicking "Get My Plan" you agree to automatic renewal of subscription. First month at €19.99, then at €59.99/month. Cancel by emailing: <a href="mailto:support@mesullc.com" className="underline">support@mesullc.com</a>. Details in Subscription Policy. A €1 test charge will verify your payment method and be refunded immediately.
+                        By clicking "Get My Plan" you agree to automatic renewal of subscription. First month at $19.99, then at $59.99/month. Cancel by emailing: <a href="mailto:support@mesu.com" className="underline">support@mesu.com</a>. Details in Subscription Policy. A $1 test charge will verify your payment method and be refunded immediately.
                     </div>
 
-                    {/* Trust Banner with Icons */}
-                    <div className="bg-[#ECF7ED] rounded-lg py-3 flex flex-col items-center justify-center text-[#559E6D] border border-[#dff2e1] gap-2">
-                        <div className="flex items-center gap-2">
+                    {/* Trust Banner with Icons (Separated) */}
+                    <div className="flex flex-col items-center gap-4 pb-8">
+                        <div className="bg-[#ECF7ED] rounded-lg py-2 px-6 flex items-center justify-center text-[#559E6D] border border-[#dff2e1] gap-2 w-full max-w-xs">
                             <Shield size={16} fill="currentColor" className="opacity-80" />
                             <span className="font-semibold text-sm">Pay safe & secure</span>
                         </div>
-                        {/* Payment Icons */}
-                        <img src="/payment-icons.png" alt="Payment Methods" className="h-6 object-contain opacity-90 mix-blend-multiply" />
+                        {/* Payment Icons (Original Size, Separated) */}
+                        <img src="/payment-icons.png" alt="Payment Methods" className="h-6 md:h-8 object-contain opacity-90 mix-blend-multiply" />
                     </div>
 
                 </div>
