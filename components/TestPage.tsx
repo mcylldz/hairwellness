@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Target, ChartBar, Shield, Check, Clock, Star, ChevronDown, ChevronUp } from 'lucide-react';
 import { SURVEY_STEPS } from '../constants';
 import { PixelService } from '../services/pixel';
+import { PaymentModal } from './PaymentModal';
 
 export const TestPage: React.FC = () => {
     const [timeLeft, setTimeLeft] = useState(600); // 10 minutes in seconds
@@ -9,6 +10,7 @@ export const TestPage: React.FC = () => {
     const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
     const [testimonialIndex, setTestimonialIndex] = useState(0);
     const [userName, setUserName] = useState('Friend');
+    const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
     // Carousel state
     const touchStart = useRef<number | null>(null);
@@ -99,24 +101,28 @@ export const TestPage: React.FC = () => {
             content_name: `${selectedPlan} Hair Wellness Plan`
         });
 
-        // Get appropriate Stripe Payment Link based on selected plan
-        const stripeLinks = {
-            '1-week': (import.meta as any).env.VITE_STRIPE_1_WEEK_LINK,
-            '4-week': (import.meta as any).env.VITE_STRIPE_4_WEEK_LINK,
-            '12-week': (import.meta as any).env.VITE_STRIPE_12_WEEK_LINK
+        // Open payment modal
+        setIsPaymentModalOpen(true);
+    };
+
+    const handlePaymentSuccess = () => {
+        // Get plan details for tracking
+        const planPrices = {
+            '1-week': 9.99,
+            '4-week': 19.99,
+            '12-week': 39.99
         };
 
-        const stripeLink = stripeLinks[selectedPlan];
+        // Track Purchase event
+        PixelService.track('Purchase', {
+            currency: 'USD',
+            value: planPrices[selectedPlan],
+            content_name: `${selectedPlan} Hair Wellness Plan`
+        });
 
-        console.log(`Stripe Checkout for ${selectedPlan}:`, stripeLink ? 'FOUND' : 'NOT FOUND');
-
-        if (stripeLink) {
-            // Redirect to Stripe checkout
-            window.location.href = stripeLink;
-        } else {
-            console.error(`CRITICAL: Stripe Payment Link missing for ${selectedPlan}`);
-            alert(`Payment link not configured for ${selectedPlan}. Please contact support.`);
-        }
+        // Show success and redirect
+        alert('Payment successful! Welcome to your Hair Wellness Plan!');
+        // You can redirect to thank you page: window.location.href = '/thank-you';
     };
 
     const faqs = [
@@ -571,6 +577,14 @@ export const TestPage: React.FC = () => {
                 </div>
 
             </div>
+
+            {/* Payment Modal */}
+            <PaymentModal
+                isOpen={isPaymentModalOpen}
+                onClose={() => setIsPaymentModalOpen(false)}
+                selectedPlan={selectedPlan}
+                onSuccess={handlePaymentSuccess}
+            />
         </div>
     );
 };
